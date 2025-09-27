@@ -1,7 +1,7 @@
 import React from 'react'
 import { useMidiInput, MidiNote } from '../hooks/useMidiInput'
 
-const MidiInput: React.FC = () => {
+const PonMachineControl: React.FC = () => {
   const {
     midiInputs,
     selectedInput1,
@@ -161,4 +161,4 @@ const MidiInput: React.FC = () => {
   )
 }
 
-export default MidiInput
+export default PonMachineControl

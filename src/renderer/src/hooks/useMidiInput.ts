@@ -38,6 +38,7 @@ export const useMidiInput = () => {
   const [midiInputs, setMidiInputs] = useState<Input[]>([])
   const [selectedInput1, setSelectedInput1] = useState<Input | null>(null)
   const [selectedInput2, setSelectedInput2] = useState<Input | null>(null)
+  const [selectedInput3, setSelectedInput3] = useState<Input | null>(null)
   const [notes, setNotes] = useState<MidiNote[]>([])
   const [isEnabled, setIsEnabled] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -61,6 +62,9 @@ export const useMidiInput = () => {
         }
         if (inputs.length > 1) {
           setSelectedInput2(inputs[1])
+        }
+        if (inputs.length > 2) {
+          setSelectedInput3(inputs[2])
         }
       } catch (err) {
         console.error('Failed to enable WebMidi:', err)
@@ -122,10 +126,21 @@ export const useMidiInput = () => {
       })
     }
 
+    if (selectedInput3) {
+      const onNote3 = handleNoteOn(3)
+      const offNote3 = handleNoteOff(3)
+      selectedInput3.addListener('noteon', onNote3)
+      selectedInput3.addListener('noteoff', offNote3)
+      cleanupFunctions.push(() => {
+        selectedInput3.removeListener('noteon')
+        selectedInput3.removeListener('noteoff')
+      })
+    }
+
     return () => {
       cleanupFunctions.forEach((fn) => fn())
     }
-  }, [selectedInput1, selectedInput2])
+  }, [selectedInput1, selectedInput2, selectedInput3])
 
   const handleInputChange1 = useCallback((inputId: string) => {
     const input = midiInputs.find((i) => i.id === inputId)
@@ -137,24 +152,33 @@ export const useMidiInput = () => {
     setSelectedInput2(input || null)
   }, [midiInputs])
 
+  const handleInputChange3 = useCallback((inputId: string) => {
+    const input = midiInputs.find((i) => i.id === inputId)
+    setSelectedInput3(input || null)
+  }, [midiInputs])
+
   const clearNotes = useCallback(() => {
     setNotes([])
   }, [])
 
   const notesPort1 = notes.filter((n) => n.port === 1)
   const notesPort2 = notes.filter((n) => n.port === 2)
+  const notesPort3 = notes.filter((n) => n.port === 3)
 
   return {
     midiInputs,
     selectedInput1,
     selectedInput2,
+    selectedInput3,
     notes,
     notesPort1,
     notesPort2,
+    notesPort3,
     isEnabled,
     error,
     handleInputChange1,
     handleInputChange2,
+    handleInputChange3,
     clearNotes
   }
 }
