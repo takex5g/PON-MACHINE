@@ -58,13 +58,11 @@ const PonMachineControl: React.FC = () => {
                     fontWeight: 'bold',
                     fontSize: '18px',
                     marginRight: '15px',
-                    color: '#666'
+                    color: note.velocity > 0 ? '#4CAF50' : '#f44336'
                   }}
                 >
-                  {note.note}
-                  {note.octave}
+                  {note.velocity > 0 ? 'OPEN' : 'CLOSE'}
                 </span>
-                <span style={{ color: '#666' }}>Vel: {note.velocity}</span>
               </div>
               <div style={{ fontSize: '12px', color: '#999' }}>
                 {new Date(note.timestamp).toLocaleTimeString()}

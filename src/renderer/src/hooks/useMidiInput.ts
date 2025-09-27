@@ -97,9 +97,17 @@ export const useMidiInput = () => {
     }
 
     const handleNoteOff = (portNum: number) => (e: NoteMessageEvent) => {
-      setNotes((prev) =>
-        prev.filter((n) => n.id !== `port${portNum}-${e.timestamp}-${e.note.number}`)
-      )
+      const noteInfo = getNoteFromNumber(e.note.number)
+      const newNote: MidiNote = {
+        note: noteInfo.note,
+        octave: noteInfo.octave,
+        velocity: 0, // velocity 0 for noteoff (CLOSE)
+        timestamp: e.timestamp,
+        id: `port${portNum}-off-${e.timestamp}-${e.note.number}`,
+        port: portNum
+      }
+
+      setNotes((prev) => [newNote, ...prev].slice(0, 50))
     }
 
     const cleanupFunctions: (() => void)[] = []
@@ -142,20 +150,29 @@ export const useMidiInput = () => {
     }
   }, [selectedInput1, selectedInput2, selectedInput3])
 
-  const handleInputChange1 = useCallback((inputId: string) => {
-    const input = midiInputs.find((i) => i.id === inputId)
-    setSelectedInput1(input || null)
-  }, [midiInputs])
+  const handleInputChange1 = useCallback(
+    (inputId: string) => {
+      const input = midiInputs.find((i) => i.id === inputId)
+      setSelectedInput1(input || null)
+    },
+    [midiInputs]
+  )
 
-  const handleInputChange2 = useCallback((inputId: string) => {
-    const input = midiInputs.find((i) => i.id === inputId)
-    setSelectedInput2(input || null)
-  }, [midiInputs])
+  const handleInputChange2 = useCallback(
+    (inputId: string) => {
+      const input = midiInputs.find((i) => i.id === inputId)
+      setSelectedInput2(input || null)
+    },
+    [midiInputs]
+  )
 
-  const handleInputChange3 = useCallback((inputId: string) => {
-    const input = midiInputs.find((i) => i.id === inputId)
-    setSelectedInput3(input || null)
-  }, [midiInputs])
+  const handleInputChange3 = useCallback(
+    (inputId: string) => {
+      const input = midiInputs.find((i) => i.id === inputId)
+      setSelectedInput3(input || null)
+    },
+    [midiInputs]
+  )
 
   const clearNotes = useCallback(() => {
     setNotes([])
