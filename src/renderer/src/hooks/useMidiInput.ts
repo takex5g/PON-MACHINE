@@ -113,35 +113,50 @@ export const useMidiInput = () => {
     const cleanupFunctions: (() => void)[] = []
 
     if (selectedInput1) {
+      const input1 = selectedInput1  // Capture the current reference
       const onNote1 = handleNoteOn(1)
       const offNote1 = handleNoteOff(1)
-      selectedInput1.addListener('noteon', onNote1)
-      selectedInput1.addListener('noteoff', offNote1)
+      input1.addListener('noteon', onNote1)
+      input1.addListener('noteoff', offNote1)
       cleanupFunctions.push(() => {
-        selectedInput1.removeListener('noteon')
-        selectedInput1.removeListener('noteoff')
+        try {
+          input1.removeListener('noteon', onNote1)
+          input1.removeListener('noteoff', offNote1)
+        } catch (e) {
+          // Input might have been disconnected
+        }
       })
     }
 
     if (selectedInput2) {
+      const input2 = selectedInput2  // Capture the current reference
       const onNote2 = handleNoteOn(2)
       const offNote2 = handleNoteOff(2)
-      selectedInput2.addListener('noteon', onNote2)
-      selectedInput2.addListener('noteoff', offNote2)
+      input2.addListener('noteon', onNote2)
+      input2.addListener('noteoff', offNote2)
       cleanupFunctions.push(() => {
-        selectedInput2.removeListener('noteon')
-        selectedInput2.removeListener('noteoff')
+        try {
+          input2.removeListener('noteon', onNote2)
+          input2.removeListener('noteoff', offNote2)
+        } catch (e) {
+          // Input might have been disconnected
+        }
       })
     }
 
     if (selectedInput3) {
+      const input3 = selectedInput3  // Capture the current reference
       const onNote3 = handleNoteOn(3)
       const offNote3 = handleNoteOff(3)
-      selectedInput3.addListener('noteon', onNote3)
-      selectedInput3.addListener('noteoff', offNote3)
+      input3.addListener('noteon', onNote3)
+      input3.addListener('noteoff', offNote3)
       cleanupFunctions.push(() => {
-        selectedInput3.removeListener('noteon')
-        selectedInput3.removeListener('noteoff')
+        try {
+          input3.removeListener('noteon', onNote3)
+          input3.removeListener('noteoff', offNote3)
+        } catch (e) {
+          // Input might have been disconnected
+        }
       })
     }
 
