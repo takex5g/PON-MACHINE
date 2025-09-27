@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { JSX } from 'react'
 import { useMidiInput, MidiNote } from '../hooks/useMidiInput'
 
 const CameraControl: React.FC = () => {
@@ -8,22 +8,23 @@ const CameraControl: React.FC = () => {
     notesPort3,
     isEnabled,
     error,
-    handleInputChange3,
-    clearNotes
+    handleInputChange3
+    // clearNotes
   } = useMidiInput()
 
-  const handleInput3Change = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleInput3Change = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     handleInputChange3(e.target.value)
   }
 
-  const renderNoteList = (portNotes: MidiNote[]) => (
+  const renderNoteList = (portNotes: MidiNote[]): JSX.Element => (
     <div
       style={{
         border: '1px solid #ccc',
         padding: '10px',
-        height: '400px',
+        flex: 1,
         overflowY: 'auto',
-        backgroundColor: '#f5f5f5'
+        backgroundColor: '#f5f5f5',
+        minHeight: 0
       }}
     >
       {portNotes.length === 0 ? (
@@ -45,7 +46,14 @@ const CameraControl: React.FC = () => {
               }}
             >
               <div>
-                <span style={{ fontWeight: 'bold', fontSize: '18px', marginRight: '15px' }}>
+                <span
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: '18px',
+                    marginRight: '15px',
+                    color: '#666'
+                  }}
+                >
                   {note.note}
                   {note.octave}
                 </span>
@@ -64,56 +72,65 @@ const CameraControl: React.FC = () => {
   return (
     <div
       style={{
-        padding: '20px',
         fontFamily: 'monospace',
-        height: '100vh',
+        height: '100%',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        paddingTop: '20px'
       }}
     >
-      <h2 style={{ marginBottom: '10px' }}>Camera Control</h2>
+      {/* <h2 style={{ marginBottom: '10px' }}>Camera Control</h2> */}
 
       {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 
       <div
         style={{
           marginBottom: '10px',
-          padding: '15px',
+          padding: '8px',
           backgroundColor: '#f0f0f0',
-          borderRadius: '4px'
+          borderRadius: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          flexWrap: 'wrap'
         }}
       >
-        <h3 style={{ marginBottom: '10px' }}>MIDI Port 3 - Camera</h3>
-        <label>
-          Device:
-          <select
-            value={selectedInput3?.id || ''}
-            onChange={handleInput3Change}
-            style={{ marginLeft: '10px', padding: '5px', width: '50%' }}
-            disabled={!isEnabled}
-          >
-            <option value="">None</option>
-            {midiInputs.map((input) => (
-              <option key={input.id} value={input.id}>
-                {input.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div style={{ marginTop: '5px', color: selectedInput3 ? 'green' : '#ccc' }}>
+        <span
+          style={{
+            fontWeight: 'bold',
+            minWidth: '80px',
+            color: 'black'
+          }}
+        >
+          Camera:
+        </span>
+        <select
+          value={selectedInput3?.id || ''}
+          onChange={handleInput3Change}
+          style={{ padding: '4px', flex: 1, minWidth: '120px' }}
+          disabled={!isEnabled}
+        >
+          <option value="">None</option>
+          {midiInputs.map((input) => (
+            <option key={input.id} value={input.id}>
+              {input.name}
+            </option>
+          ))}
+        </select>
+        <span style={{ color: selectedInput3 ? 'green' : '#ccc', fontSize: '14px' }}>
           {selectedInput3 ? '● Connected' : '○ Not connected'}
-        </div>
+        </span>
       </div>
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         {renderNoteList(notesPort3)}
       </div>
 
-      <div style={{ marginTop: '10px', textAlign: 'center' }}>
+      {/* <div style={{ marginTop: '10px', textAlign: 'center' }}>
         <button onClick={clearNotes} style={{ padding: '10px 20px', fontSize: '16px' }}>
           Clear Camera Notes
         </button>
-      </div>
+      </div> */}
     </div>
   )
 }
