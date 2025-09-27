@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { STEP400Controller } from './step400'
 
 function createWindow(): void {
   // Create the browser window.
@@ -49,8 +50,34 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
+  const step400 = new STEP400Controller('10.0.0.101', 50000)
+  step400.open()
+
   ipcMain.on('ping', () => console.log('pong'))
+
+  ipcMain.on('step400:setCurrentMode', (_event, motorID: number) => {
+    step400.setCurrentMode(motorID)
+  })
+
+  ipcMain.on('step400:setTval', (_event, motorID: number, tval: number) => {
+    step400.setTval(motorID, tval)
+  })
+
+  ipcMain.on('step400:setSpeed', (_event, motorID: number, speed: number) => {
+    step400.setSpeed(motorID, speed)
+  })
+
+  ipcMain.on('step400:run', (_event, motorID: number, speed: number) => {
+    step400.run(motorID, speed)
+  })
+
+  ipcMain.on('step400:softStop', (_event, motorID: number) => {
+    step400.softStop(motorID)
+  })
+
+  ipcMain.on('step400:softHiZ', (_event, motorID: number) => {
+    step400.softHiZ(motorID)
+  })
 
   createWindow()
 
