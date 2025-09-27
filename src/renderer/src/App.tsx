@@ -11,6 +11,16 @@ function App(): React.JSX.Element {
     window.api.step400.setCurrentMode(motorID)
   }
 
+  const handleTvalChange = (newTval: number): void => {
+    setTval(newTval)
+    window.api.step400.setTval(motorID, newTval)
+  }
+
+  const handleSpeedChange = (newSpeed: number): void => {
+    setSpeed(newSpeed)
+    window.api.step400.setSpeed(motorID, newSpeed)
+  }
+
   const handleRun = (): void => {
     window.api.step400.setTval(motorID, tval)
     setTimeout(() => {
@@ -42,7 +52,7 @@ function App(): React.JSX.Element {
               min="0"
               max="127"
               value={tval}
-              onChange={(e) => setTval(Number(e.target.value))}
+              onChange={(e) => handleTvalChange(Number(e.target.value))}
             />
           </label>
         </div>
@@ -56,7 +66,7 @@ function App(): React.JSX.Element {
               max="10000"
               step="100"
               value={speed}
-              onChange={(e) => setSpeed(Number(e.target.value))}
+              onChange={(e) => handleSpeedChange(Number(e.target.value))}
             />
           </label>
         </div>
