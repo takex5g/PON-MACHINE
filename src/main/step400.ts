@@ -42,24 +42,28 @@ export class STEP400Controller {
   }
 
   setTval(motorID: number, tval: number): void {
+    // Based on profile: HOLD=4, RUN/ACC/DEC=variable
+    const holdTval = 2 // Lower value for holding to reduce heat
     this.udpPort.send({
       address: '/setTval',
       args: [
         { type: 'i', value: motorID },
-        { type: 'i', value: tval },
-        { type: 'i', value: tval },
-        { type: 'i', value: tval },
-        { type: 'i', value: tval }
+        { type: 'i', value: holdTval }, // TVAL_HOLD
+        { type: 'i', value: tval }, // TVAL_RUN
+        { type: 'i', value: tval }, // TVAL_ACC
+        { type: 'i', value: tval } // TVAL_DEC
       ]
     })
   }
 
   setSpeed(motorID: number, speed: number): void {
     this.udpPort.send({
-      address: '/setMaxSpeed',
+      address: '/setSpeedProfile',
       args: [
         { type: 'i', value: motorID },
-        { type: 'f', value: speed }
+        { type: 'f', value: 2000.0 }, // acc (from profile)
+        { type: 'f', value: 2000.0 }, // dec (from profile)
+        { type: 'f', value: speed } // maxSpeed
       ]
     })
   }

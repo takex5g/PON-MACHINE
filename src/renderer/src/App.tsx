@@ -3,8 +3,8 @@ import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
 
 function App(): React.JSX.Element {
-  const [tval, setTval] = useState(16)
-  const [speed, setSpeed] = useState(1000)
+  const [tval, setTval] = useState(9)  // TVAL_RUN from profile
+  const [speed, setSpeed] = useState(620)  // maxSpeed from profile
   const motorID = 1
 
   const handleInit = (): void => {
