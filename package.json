@@ -23,7 +23,8 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "osc": "^2.4.5"
+    "osc": "^2.4.5",
+    "webmidi": "^3.1.12"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
