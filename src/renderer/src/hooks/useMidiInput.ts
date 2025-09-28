@@ -113,7 +113,7 @@ export const useMidiInput = () => {
     const cleanupFunctions: (() => void)[] = []
 
     if (selectedInput1) {
-      const input1 = selectedInput1  // Capture the current reference
+      const input1 = selectedInput1 // Capture the current reference
       const onNote1 = handleNoteOn(1)
       const offNote1 = handleNoteOff(1)
       input1.addListener('noteon', onNote1)
@@ -129,7 +129,7 @@ export const useMidiInput = () => {
     }
 
     if (selectedInput2) {
-      const input2 = selectedInput2  // Capture the current reference
+      const input2 = selectedInput2 // Capture the current reference
       const onNote2 = handleNoteOn(2)
       const offNote2 = handleNoteOff(2)
       input2.addListener('noteon', onNote2)
@@ -145,7 +145,7 @@ export const useMidiInput = () => {
     }
 
     if (selectedInput3) {
-      const input3 = selectedInput3  // Capture the current reference
+      const input3 = selectedInput3 // Capture the current reference
       const onNote3 = handleNoteOn(3)
       const offNote3 = handleNoteOff(3)
       input3.addListener('noteon', onNote3)

@@ -11,6 +11,8 @@ interface STEP400API {
   move: (motorID: number, steps: number) => void
   goHome: (motorID: number) => void
   homing: (motorID: number) => void
+  setStepMode: (motorID: number, stepMode: number) => void
+  getMicrostepMode: (motorID: number) => void
 }
 
 declare global {

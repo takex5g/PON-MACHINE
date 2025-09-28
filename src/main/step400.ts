@@ -24,6 +24,14 @@ export class STEP400Controller {
     this.udpPort.on('error', (error) => {
       console.error('STEP400 OSC error:', error)
     })
+
+    this.udpPort.on('message', (oscMsg) => {
+      if (oscMsg.address === '/getMicrostepMode') {
+        const motorID = oscMsg.args[0]?.value
+        const stepMode = oscMsg.args[1]?.value
+        console.log(`Motor ${motorID} MicrostepMode: ${stepMode}`)
+      }
+    })
   }
 
   open(): void {
@@ -129,6 +137,28 @@ export class STEP400Controller {
   homing(motorID: number): void {
     this.udpPort.send({
       address: '/homing',
+      args: [{ type: 'i', value: motorID }]
+    })
+  }
+
+  setStepMode(motorID: number, stepMode: number): void {
+    this.udpPort.send({
+      address: '/setMicrostepMode',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'i', value: stepMode }
+      ]
+    })
+
+    // 設定後に現在のマイクロステップモードを取得してコンソールに出力
+    setTimeout(() => {
+      this.getMicrostepMode(motorID)
+    }, 100) // 100ms後に取得
+  }
+
+  getMicrostepMode(motorID: number): void {
+    this.udpPort.send({
+      address: '/getMicrostepMode',
       args: [{ type: 'i', value: motorID }]
     })
   }

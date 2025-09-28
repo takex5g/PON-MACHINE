@@ -95,6 +95,14 @@ app.whenReady().then(() => {
     step400.homing(motorID)
   })
 
+  ipcMain.on('step400:setStepMode', (_event, motorID: number, stepMode: number) => {
+    step400.setStepMode(motorID, stepMode)
+  })
+
+  ipcMain.on('step400:getMicrostepMode', (_event, motorID: number) => {
+    step400.getMicrostepMode(motorID)
+  })
+
   createWindow()
 
   app.on('activate', function () {

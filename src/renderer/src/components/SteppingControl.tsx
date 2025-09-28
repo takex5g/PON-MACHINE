@@ -1,5 +1,17 @@
 import React, { useState } from 'react'
 
+// ステップモードの定義
+const STEP_MODES = [
+  { value: 0, label: 'フルステップ', description: '最大トルク、高速動作に適している' },
+  { value: 1, label: '1/2マイクロステップ', description: 'バランスの良い選択' },
+  { value: 2, label: '1/4マイクロステップ', description: '中程度の精度とトルク' },
+  { value: 3, label: '1/8マイクロステップ', description: '高い精度、中程度のトルク' },
+  { value: 4, label: '1/16マイクロステップ', description: '非常に高い精度' },
+  { value: 5, label: '1/32マイクロステップ', description: '極めて高い精度' },
+  { value: 6, label: '1/64マイクロステップ', description: '最高精度' },
+  { value: 7, label: '1/128マイクロステップ', description: '最高精度（現在の設定）' }
+]
+
 const SteppingControl: React.FC = () => {
   const [motorId, setMotorId] = useState(1)
   const [tval, setTval] = useState(9)
@@ -8,9 +20,15 @@ const SteppingControl: React.FC = () => {
   const [position, setPosition] = useState(0)
   const [isRunning, setIsRunning] = useState(false)
   const [isHoming, setIsHoming] = useState(false)
+  const [stepMode, setStepMode] = useState(7) // デフォルト: 1/128マイクロステップ
 
   const handleInit = (): void => {
     window.api.step400.setCurrentMode(motorId)
+  }
+
+  const handleStepModeChange = (newStepMode: number): void => {
+    setStepMode(newStepMode)
+    window.api.step400.setStepMode(motorId, newStepMode)
   }
 
   const handleTvalChange = (newTval: number): void => {
@@ -114,6 +132,72 @@ const SteppingControl: React.FC = () => {
             Initialize
           </button>
         </label>
+      </div>
+
+      {/* Step Mode Selection */}
+      <div
+        style={{
+          padding: '15px',
+          backgroundColor: '#f5f5f5',
+          borderRadius: '8px',
+          border: '1px solid #ddd'
+        }}
+      >
+        <h3 style={{ marginBottom: '15px', fontSize: '16px' }}>ステップモード設定</h3>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+            ステップモード:
+          </label>
+          <select
+            value={stepMode}
+            onChange={(e) => handleStepModeChange(Number(e.target.value))}
+            style={{
+              padding: '8px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              fontSize: '14px',
+              width: '100%',
+              marginBottom: '8px'
+            }}
+          >
+            {STEP_MODES.map((mode) => (
+              <option key={mode.value} value={mode.value}>
+                {mode.label}
+              </option>
+            ))}
+          </select>
+          <div
+            style={{
+              fontSize: '12px',
+              color: '#666',
+              backgroundColor: '#f9f9f9',
+              padding: '8px',
+              borderRadius: '4px',
+              border: '1px solid #eee'
+            }}
+          >
+            <strong>{STEP_MODES[stepMode].label}:</strong> {STEP_MODES[stepMode].description}
+          </div>
+        </div>
+
+        <div
+          style={{
+            fontSize: '12px',
+            color: '#d32f2f',
+            backgroundColor: '#ffebee',
+            padding: '8px',
+            borderRadius: '4px',
+            border: '1px solid #ffcdd2'
+          }}
+        >
+          <strong>推奨設定:</strong>
+          <br />
+          • 高速動作・脱調回避: フルステップ (0)
+          <br />
+          • バランス重視: 1/8マイクロステップ (3)
+          <br />• 高精度必要: 1/16マイクロステップ (4)
+        </div>
       </div>
 
       {/* Speed and TVAL Controls */}
