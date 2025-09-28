@@ -1,17 +1,23 @@
 import * as osc from 'osc'
+import { EventEmitter } from 'events'
+import * as os from 'os'
 
-export class STEP400Controller {
+export class STEP400Controller extends EventEmitter {
   private udpPort: osc.UDPPort
   private remoteAddress: string
   private remotePort: number
+  private localPort: number
 
-  constructor(remoteAddress = '10.0.0.101', remotePort = 50000) {
+  constructor(remoteAddress = '10.0.0.101', remotePort = 50000, deviceID = 1) {
+    super()
     this.remoteAddress = remoteAddress
     this.remotePort = remotePort
+    // STEP400 sends responses to port 50100 + deviceID
+    this.localPort = 50100 + deviceID
 
     this.udpPort = new osc.UDPPort({
       localAddress: '0.0.0.0',
-      localPort: 57121,
+      localPort: this.localPort,
       remoteAddress: this.remoteAddress,
       remotePort: this.remotePort,
       metadata: true
@@ -26,10 +32,14 @@ export class STEP400Controller {
     })
 
     this.udpPort.on('message', (oscMsg) => {
-      if (oscMsg.address === '/getMicrostepMode') {
-        const motorID = oscMsg.args[0]?.value
-        const stepMode = oscMsg.args[1]?.value
-        console.log(`Motor ${motorID} MicrostepMode: ${stepMode}`)
+      console.log(oscMsg)
+      this.emit('message', oscMsg)
+
+      // Handle booted message to resend setDestIp
+      if (oscMsg.address === '/booted') {
+        setTimeout(() => {
+          this.setDestIp()
+        }, 100)
       }
     })
   }
@@ -149,17 +159,88 @@ export class STEP400Controller {
         { type: 'i', value: stepMode }
       ]
     })
-
-    // 設定後に現在のマイクロステップモードを取得してコンソールに出力
-    setTimeout(() => {
-      this.getMicrostepMode(motorID)
-    }, 100) // 100ms後に取得
   }
 
   getMicrostepMode(motorID: number): void {
     this.udpPort.send({
       address: '/getMicrostepMode',
       args: [{ type: 'i', value: motorID }]
+    })
+  }
+
+  getPosition(motorID: number): void {
+    this.udpPort.send({
+      address: '/getPosition',
+      args: [{ type: 'i', value: motorID }]
+    })
+  }
+
+  getStatus(motorID: number): void {
+    this.udpPort.send({
+      address: '/getStatus',
+      args: [{ type: 'i', value: motorID }]
+    })
+  }
+
+  getBusy(motorID: number): void {
+    this.udpPort.send({
+      address: '/getBusy',
+      args: [{ type: 'i', value: motorID }]
+    })
+  }
+
+  getHiZ(motorID: number): void {
+    this.udpPort.send({
+      address: '/getHiZ',
+      args: [{ type: 'i', value: motorID }]
+    })
+  }
+
+  getDir(motorID: number): void {
+    this.udpPort.send({
+      address: '/getDir',
+      args: [{ type: 'i', value: motorID }]
+    })
+  }
+
+  // Enable automatic status updates
+  enableBusyReport(motorID: number, enable: boolean): void {
+    this.udpPort.send({
+      address: '/enableBusyReport',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'i', value: enable ? 1 : 0 }
+      ]
+    })
+  }
+
+  enableHizReport(motorID: number, enable: boolean): void {
+    this.udpPort.send({
+      address: '/enableHizReport',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'i', value: enable ? 1 : 0 }
+      ]
+    })
+  }
+
+  enableDirReport(motorID: number, enable: boolean): void {
+    this.udpPort.send({
+      address: '/enableDirReport',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'i', value: enable ? 1 : 0 }
+      ]
+    })
+  }
+
+  enableMotorStatusReport(motorID: number, enable: boolean): void {
+    this.udpPort.send({
+      address: '/enableMotorStatusReport',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'i', value: enable ? 1 : 0 }
+      ]
     })
   }
 }

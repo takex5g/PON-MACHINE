@@ -21,7 +21,12 @@ const api = {
       ipcRenderer.send('step400:setHomeSwMode', motorID, switchMode),
     setStepMode: (motorID: number, stepMode: number) =>
       ipcRenderer.send('step400:setStepMode', motorID, stepMode),
-    getMicrostepMode: (motorID: number) => ipcRenderer.send('step400:getMicrostepMode', motorID)
+    getMicrostepMode: (motorID: number) => ipcRenderer.send('step400:getMicrostepMode', motorID),
+    getPosition: (motorID: number) => ipcRenderer.send('step400:getPosition', motorID),
+    getStatus: (motorID: number) => ipcRenderer.send('step400:getStatus', motorID),
+    getBusy: (motorID: number) => ipcRenderer.send('step400:getBusy', motorID),
+    getHiZ: (motorID: number) => ipcRenderer.send('step400:getHiZ', motorID),
+    getDir: (motorID: number) => ipcRenderer.send('step400:getDir', motorID)
   }
 }
 

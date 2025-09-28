@@ -50,8 +50,18 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  const step400 = new STEP400Controller('10.0.0.101', 50000)
+  // Initialize STEP400 controller
+  const step400 = new STEP400Controller('10.0.0.101', 50000, 1)
   step400.open()
+
+  // Enable automatic status reports
+  setTimeout(() => {
+    for (let motorID = 1; motorID <= 4; motorID++) {
+      step400.enableBusyReport(motorID, true)
+      step400.enableHizReport(motorID, true)
+      step400.enableMotorStatusReport(motorID, true)
+    }
+  }, 1000)
 
   ipcMain.on('ping', () => console.log('pong'))
 
@@ -101,6 +111,26 @@ app.whenReady().then(() => {
 
   ipcMain.on('step400:getMicrostepMode', (_event, motorID: number) => {
     step400.getMicrostepMode(motorID)
+  })
+
+  ipcMain.on('step400:getPosition', (_event, motorID: number) => {
+    step400.getPosition(motorID)
+  })
+
+  ipcMain.on('step400:getStatus', (_event, motorID: number) => {
+    step400.getStatus(motorID)
+  })
+
+  ipcMain.on('step400:getBusy', (_event, motorID: number) => {
+    step400.getBusy(motorID)
+  })
+
+  ipcMain.on('step400:getHiZ', (_event, motorID: number) => {
+    step400.getHiZ(motorID)
+  })
+
+  ipcMain.on('step400:getDir', (_event, motorID: number) => {
+    step400.getDir(motorID)
   })
 
   createWindow()
