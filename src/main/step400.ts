@@ -1,6 +1,5 @@
 import * as osc from 'osc'
 import { EventEmitter } from 'events'
-import * as os from 'os'
 
 export class STEP400Controller extends EventEmitter {
   private udpPort: osc.UDPPort
@@ -32,15 +31,39 @@ export class STEP400Controller extends EventEmitter {
     })
 
     this.udpPort.on('message', (oscMsg) => {
-      console.log(oscMsg)
-      this.emit('message', oscMsg)
+      // Parse and display message in readable format
+      const values = oscMsg.args?.map((arg: any) => arg.value) || []
 
-      // Handle booted message to resend setDestIp
-      if (oscMsg.address === '/booted') {
-        setTimeout(() => {
-          this.setDestIp()
-        }, 100)
+      switch (oscMsg.address) {
+        case '/destIp':
+          console.log(`Destination IP confirmed: ${values.slice(0, 4).join('.')}`)
+          break
+        case '/microstepMode':
+          console.log(`Motor ${values[0]} - Microstep Mode: ${values[1]}`)
+          break
+        case '/position':
+          console.log(`Motor ${values[0]} - Position: ${values[1]}`)
+          break
+        case '/busy':
+          console.log(`Motor ${values[0]} - Busy: ${values[1] ? 'Yes' : 'No'}`)
+          break
+        case '/HiZ':
+          console.log(`Motor ${values[0]} - HiZ: ${values[1] ? 'Yes' : 'No'}`)
+          break
+        case '/motorStatus':
+          console.log(`Motor ${values[0]} - Status: ${values[1]}`)
+          break
+        case '/dir':
+          console.log(`Motor ${values[0]} - Direction: ${values[1] ? 'Forward' : 'Reverse'}`)
+          break
+        case '/booted':
+          console.log('STEP400 has booted')
+          break
+        default:
+          console.log(`${oscMsg.address}: [${values.join(', ')}]`)
       }
+
+      this.emit('message', oscMsg)
     })
   }
 
@@ -152,6 +175,7 @@ export class STEP400Controller extends EventEmitter {
   }
 
   setStepMode(motorID: number, stepMode: number): void {
+    console.log('setStepMote')
     this.udpPort.send({
       address: '/setMicrostepMode',
       args: [
@@ -159,6 +183,9 @@ export class STEP400Controller extends EventEmitter {
         { type: 'i', value: stepMode }
       ]
     })
+    setTimeout(() => {
+      this.getMicrostepMode(motorID)
+    }, 100)
   }
 
   getMicrostepMode(motorID: number): void {
