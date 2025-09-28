@@ -118,4 +118,18 @@ export class STEP400Controller {
       ]
     })
   }
+
+  goHome(motorID: number): void {
+    this.udpPort.send({
+      address: '/goHome',
+      args: [{ type: 'i', value: motorID }]
+    })
+  }
+
+  homing(motorID: number): void {
+    this.udpPort.send({
+      address: '/homing',
+      args: [{ type: 'i', value: motorID }]
+    })
+  }
 }

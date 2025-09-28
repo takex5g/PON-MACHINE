@@ -79,6 +79,22 @@ app.whenReady().then(() => {
     step400.softHiZ(motorID)
   })
 
+  ipcMain.on('step400:goTo', (_event, motorID: number, position: number) => {
+    step400.goTo(motorID, position)
+  })
+
+  ipcMain.on('step400:move', (_event, motorID: number, steps: number) => {
+    step400.move(motorID, steps)
+  })
+
+  ipcMain.on('step400:goHome', (_event, motorID: number) => {
+    step400.goHome(motorID)
+  })
+
+  ipcMain.on('step400:homing', (_event, motorID: number) => {
+    step400.homing(motorID)
+  })
+
   createWindow()
 
   app.on('activate', function () {

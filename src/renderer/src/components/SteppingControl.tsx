@@ -4,8 +4,10 @@ const SteppingControl: React.FC = () => {
   const [motorId, setMotorId] = useState(1)
   const [tval, setTval] = useState(9)
   const [speed, setSpeed] = useState(620)
+  const [direction, setDirection] = useState<'forward' | 'reverse'>('forward')
   const [position, setPosition] = useState(0)
   const [isRunning, setIsRunning] = useState(false)
+  const [isHoming, setIsHoming] = useState(false)
 
   const handleInit = (): void => {
     window.api.step400.setCurrentMode(motorId)
@@ -24,8 +26,9 @@ const SteppingControl: React.FC = () => {
   const handleRun = (): void => {
     window.api.step400.setTval(motorId, tval)
     setTimeout(() => {
-      window.api.step400.setSpeed(motorId, speed)
-      window.api.step400.run(motorId, speed)
+      const actualSpeed = direction === 'forward' ? speed : -speed
+      window.api.step400.setSpeed(motorId, Math.abs(speed))
+      window.api.step400.run(motorId, actualSpeed)
       setIsRunning(true)
     }, 200)
   }
@@ -46,6 +49,15 @@ const SteppingControl: React.FC = () => {
   const handleHome = (): void => {
     window.api.step400.goHome(motorId)
     setPosition(0)
+  }
+
+  const handleHoming = (): void => {
+    setIsHoming(true)
+    window.api.step400.homing(motorId)
+    setTimeout(() => {
+      setIsHoming(false)
+      setPosition(0)
+    }, 5000) // Assume homing completes within 5 seconds
   }
 
   return (
@@ -125,7 +137,14 @@ const SteppingControl: React.FC = () => {
             onChange={(e) => handleTvalChange(Number(e.target.value))}
             style={{ width: '100%' }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#666' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: '12px',
+              color: '#666'
+            }}
+          >
             <span>0</span>
             <span>127</span>
           </div>
@@ -144,7 +163,14 @@ const SteppingControl: React.FC = () => {
             onChange={(e) => handleSpeedChange(Number(e.target.value))}
             style={{ width: '100%' }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#666' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: '12px',
+              color: '#666'
+            }}
+          >
             <span>100</span>
             <span>10000</span>
           </div>
@@ -160,6 +186,35 @@ const SteppingControl: React.FC = () => {
           border: '1px solid #ddd'
         }}
       >
+        <h3 style={{ marginBottom: '15px', fontSize: '16px' }}>Run Control</h3>
+
+        {/* Direction Selection */}
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+            Direction:
+          </label>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <input
+                type="radio"
+                value="forward"
+                checked={direction === 'forward'}
+                onChange={(e) => setDirection(e.target.value as 'forward' | 'reverse')}
+              />
+              <span>Forward (正転)</span>
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <input
+                type="radio"
+                value="reverse"
+                checked={direction === 'reverse'}
+                onChange={(e) => setDirection(e.target.value as 'forward' | 'reverse')}
+              />
+              <span>Reverse (逆転)</span>
+            </label>
+          </div>
+        </div>
+
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
           <button
             onClick={handleRun}
@@ -175,7 +230,7 @@ const SteppingControl: React.FC = () => {
               fontWeight: 'bold'
             }}
           >
-            {isRunning ? 'Running...' : 'Run'}
+            {isRunning ? 'Running...' : `Run ${direction === 'forward' ? '→' : '←'}`}
           </button>
           <button
             onClick={handleStop}
@@ -191,6 +246,52 @@ const SteppingControl: React.FC = () => {
             }}
           >
             Stop
+          </button>
+        </div>
+      </div>
+
+      {/* Homing Controls */}
+      <div
+        style={{
+          padding: '15px',
+          backgroundColor: '#f5f5f5',
+          borderRadius: '8px',
+          border: '1px solid #ddd'
+        }}
+      >
+        <h3 style={{ marginBottom: '15px', fontSize: '16px' }}>Homing (原点復帰)</h3>
+
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <button
+            onClick={handleHoming}
+            disabled={isHoming || isRunning}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: isHoming ? '#FFA726' : '#FF6B35',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: isHoming || isRunning ? 'not-allowed' : 'pointer',
+              fontSize: '16px',
+              fontWeight: 'bold'
+            }}
+          >
+            {isHoming ? 'Homing...' : 'Start Homing'}
+          </button>
+          <button
+            onClick={handleHome}
+            disabled={isHoming || isRunning}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: '#607D8B',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: isHoming || isRunning ? 'not-allowed' : 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            Go Home (0)
           </button>
         </div>
       </div>
@@ -254,7 +355,7 @@ const SteppingControl: React.FC = () => {
             ← 100 steps
           </button>
           <button
-            onClick={handleHome}
+            onClick={() => setPosition(0)}
             style={{
               padding: '8px 16px',
               backgroundColor: '#607D8B',
@@ -265,7 +366,7 @@ const SteppingControl: React.FC = () => {
               fontSize: '14px'
             }}
           >
-            Home
+            Reset Position
           </button>
           <button
             onClick={() => handleMove(100)}
@@ -288,9 +389,9 @@ const SteppingControl: React.FC = () => {
       <div
         style={{
           padding: '15px',
-          backgroundColor: isRunning ? '#e8f5e9' : '#f5f5f5',
+          backgroundColor: isHoming ? '#fff3e0' : isRunning ? '#e8f5e9' : '#f5f5f5',
           borderRadius: '8px',
-          border: `1px solid ${isRunning ? '#4CAF50' : '#ddd'}`
+          border: `1px solid ${isHoming ? '#FF6B35' : isRunning ? '#4CAF50' : '#ddd'}`
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -299,11 +400,11 @@ const SteppingControl: React.FC = () => {
               width: '12px',
               height: '12px',
               borderRadius: '50%',
-              backgroundColor: isRunning ? '#4CAF50' : '#ccc'
+              backgroundColor: isHoming ? '#FF6B35' : isRunning ? '#4CAF50' : '#ccc'
             }}
           />
           <span style={{ fontWeight: 'bold' }}>
-            Status: {isRunning ? 'Running' : 'Stopped'}
+            Status: {isHoming ? 'Homing' : isRunning ? 'Running' : 'Stopped'}
           </span>
         </div>
       </div>

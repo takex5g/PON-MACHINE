@@ -8,7 +8,13 @@ const api = {
     setSpeed: (motorID: number, speed: number) => ipcRenderer.send('step400:setSpeed', motorID, speed),
     run: (motorID: number, speed: number) => ipcRenderer.send('step400:run', motorID, speed),
     softStop: (motorID: number) => ipcRenderer.send('step400:softStop', motorID),
-    softHiZ: (motorID: number) => ipcRenderer.send('step400:softHiZ', motorID)
+    softHiZ: (motorID: number) => ipcRenderer.send('step400:softHiZ', motorID),
+    goTo: (motorID: number, position: number) => ipcRenderer.send('step400:goTo', motorID, position),
+    move: (motorID: number, steps: number) => ipcRenderer.send('step400:move', motorID, steps),
+    goHome: (motorID: number) => ipcRenderer.send('step400:goHome', motorID),
+    homing: (motorID: number) => ipcRenderer.send('step400:homing', motorID),
+    setHomingDirection: (motorID: number, direction: number) => ipcRenderer.send('step400:setHomingDirection', motorID, direction),
+    setHomeSwMode: (motorID: number, switchMode: number) => ipcRenderer.send('step400:setHomeSwMode', motorID, switchMode)
   }
 }
 

@@ -7,6 +7,10 @@ interface STEP400API {
   run: (motorID: number, speed: number) => void
   softStop: (motorID: number) => void
   softHiZ: (motorID: number) => void
+  goTo: (motorID: number, position: number) => void
+  move: (motorID: number, steps: number) => void
+  goHome: (motorID: number) => void
+  homing: (motorID: number) => void
 }
 
 declare global {
