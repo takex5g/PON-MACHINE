@@ -121,6 +121,10 @@ export const useMidiInput = () => {
       const input1 = selectedInput1 // Capture the current reference
       const onNote1 = handleNoteOn(1)
       const offNote1 = handleNoteOff(1)
+      // Remove all existing listeners before adding new ones
+      input1.removeListener('noteon')
+      input1.removeListener('noteoff')
+
       input1.addListener('noteon', onNote1)
       input1.addListener('noteoff', offNote1)
       cleanupFunctions.push(() => {
@@ -137,6 +141,11 @@ export const useMidiInput = () => {
       const input2 = selectedInput2 // Capture the current reference
       const onNote2 = handleNoteOn(2)
       const offNote2 = handleNoteOff(2)
+
+      // Remove all existing listeners before adding new ones
+      input2.removeListener('noteon')
+      input2.removeListener('noteoff')
+
       input2.addListener('noteon', onNote2)
       input2.addListener('noteoff', offNote2)
       cleanupFunctions.push(() => {
@@ -153,6 +162,11 @@ export const useMidiInput = () => {
       const input3 = selectedInput3 // Capture the current reference
       const onNote3 = handleNoteOn(3)
       const offNote3 = handleNoteOff(3)
+
+      // Remove all existing listeners before adding new ones
+      input3.removeListener('noteon')
+      input3.removeListener('noteoff')
+
       input3.addListener('noteon', onNote3)
       input3.addListener('noteoff', offNote3)
       cleanupFunctions.push(() => {

@@ -96,26 +96,8 @@ class ATEMManager {
     }
 
     try {
-      // トランジション時間を500ms（0.5秒）に設定
-      await this.atem.setTransitionSettings({
-        nextTransition: {
-          selection: 1 // BKGD (Background)
-        }
-      }, 0)
-
-      // MIXトランジションに設定し、時間を設定
-      await this.atem.setTransitionStyle({
-        style: 0, // 0 = MIX (フェード)
-        nextStyle: 0
-      }, 0)
-
-      await this.atem.setTransitionMixSettings({
-        rate: 25 // 25フレーム（約0.5秒 @ 50fps）
-      }, 0)
-
       // プレビューにカメラを設定
-      await this.atem.changePreviewInput(cameraId)
-
+      await this.atem.changePreviewInput(cameraId, 0)
       // オートトランジション実行（フェード切り替え）
       await this.atem.autoTransition(0)
 
