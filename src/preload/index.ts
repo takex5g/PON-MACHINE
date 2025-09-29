@@ -2,6 +2,15 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 const api = {
+  atem: {
+    connect: (ip?: string) => ipcRenderer.invoke('atem:connect', ip),
+    disconnect: () => ipcRenderer.invoke('atem:disconnect'),
+    getStatus: () => ipcRenderer.invoke('atem:getStatus'),
+    switchCamera: (cameraId: number) => ipcRenderer.invoke('atem:switchCamera', cameraId)
+  },
+  midi: {
+    sendPort3Note: (note: string) => ipcRenderer.send('midi:port3Note', note)
+  },
   step400: {
     setCurrentMode: (motorID: number) => ipcRenderer.send('step400:setCurrentMode', motorID),
     setTval: (motorID: number, tval: number) => ipcRenderer.send('step400:setTval', motorID, tval),

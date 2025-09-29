@@ -1,5 +1,16 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 
+interface ATEMAPI {
+  connect: (ip?: string) => Promise<{ success: boolean; error?: string }>
+  disconnect: () => Promise<{ success: boolean }>
+  getStatus: () => Promise<{ connected: boolean; ipAddress: string }>
+  switchCamera: (cameraId: number) => Promise<{ success: boolean; error?: string }>
+}
+
+interface MidiAPI {
+  sendPort3Note: (note: string) => void
+}
+
 interface STEP400API {
   setCurrentMode: (motorID: number) => void
   setTval: (motorID: number, tval: number) => void
@@ -24,6 +35,8 @@ declare global {
   interface Window {
     electron: ElectronAPI
     api: {
+      atem: ATEMAPI
+      midi: MidiAPI
       step400: STEP400API
     }
   }

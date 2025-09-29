@@ -2,6 +2,7 @@ import TabContainer from './components/TabContainer'
 import PonMachineControl from './components/PonMachineControl'
 import CameraControl from './components/CameraControl'
 import SteppingControl from './components/SteppingControl'
+import ATEMControl from './components/ATEMControl'
 
 function App(): React.JSX.Element {
   const tabs = [
@@ -30,6 +31,11 @@ function App(): React.JSX.Element {
       id: 'stepping',
       label: 'ステッピング',
       content: <SteppingControl />
+    },
+    {
+      id: 'atem',
+      label: 'ATEM',
+      content: <ATEMControl />
     }
   ]
 

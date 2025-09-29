@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { STEP400Controller } from './step400'
+import { atemManager } from './atem'
 
 const STEP400_IP = '10.0.0.101'
 
@@ -64,8 +65,6 @@ app.whenReady().then(() => {
       step400.enableMotorStatusReport(motorID, true)
     }
   }, 1000)
-
-  ipcMain.on('ping', () => console.log('pong'))
 
   ipcMain.on('step400:setCurrentMode', (_event, motorID: number) => {
     step400.setCurrentMode(motorID)
@@ -133,6 +132,11 @@ app.whenReady().then(() => {
 
   ipcMain.on('step400:getDir', (_event, motorID: number) => {
     step400.getDir(motorID)
+  })
+
+  // Handle MIDI Port3 notes for ATEM control
+  ipcMain.on('midi:port3Note', (_event, note: string) => {
+    atemManager.handleMidiNote(note)
   })
 
   createWindow()

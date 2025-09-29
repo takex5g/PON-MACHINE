@@ -94,6 +94,11 @@ export const useMidiInput = () => {
       }
 
       setNotes((prev) => [newNote, ...prev].slice(0, 50))
+
+      // Send Port3 notes C, D, E, F to ATEM controller
+      if (portNum === 3 && ['C', 'D', 'E', 'F'].includes(noteInfo.note)) {
+        window.api.midi.sendPort3Note(noteInfo.note)
+      }
     }
 
     const handleNoteOff = (portNum: number) => (e: NoteMessageEvent) => {
