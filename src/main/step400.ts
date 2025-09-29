@@ -1,13 +1,15 @@
 import * as osc from 'osc'
 import { EventEmitter } from 'events'
 
+const DEFAULT_STEP400_IP = '10.0.0.101'
+
 export class STEP400Controller extends EventEmitter {
   private udpPort: osc.UDPPort
   private remoteAddress: string
   private remotePort: number
   private localPort: number
 
-  constructor(remoteAddress = '10.0.0.101', remotePort = 50000, deviceID = 1) {
+  constructor(remoteAddress = DEFAULT_STEP400_IP, remotePort = 50000, deviceID = 1) {
     super()
     this.remoteAddress = remoteAddress
     this.remotePort = remotePort
