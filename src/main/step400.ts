@@ -325,7 +325,7 @@ export class STEP400Controller extends EventEmitter {
 
   // Custom helper: Move motor to close position (-3000)
   moveToClosePosition(motorID: number): void {
-    this.goTo(motorID, -3000)
+    this.goTo(motorID, -5000)
   }
 
   // Custom helper: Move motor to open position (home: 0)
