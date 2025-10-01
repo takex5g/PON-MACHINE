@@ -35,7 +35,10 @@ const api = {
     getStatus: (motorID: number) => ipcRenderer.send('step400:getStatus', motorID),
     getBusy: (motorID: number) => ipcRenderer.send('step400:getBusy', motorID),
     getHiZ: (motorID: number) => ipcRenderer.send('step400:getHiZ', motorID),
-    getDir: (motorID: number) => ipcRenderer.send('step400:getDir', motorID)
+    getDir: (motorID: number) => ipcRenderer.send('step400:getDir', motorID),
+    moveToOpenPosition: (motorID: number) => ipcRenderer.send('step400:moveToOpenPosition', motorID),
+    moveToClosePosition: (motorID: number) =>
+      ipcRenderer.send('step400:moveToClosePosition', motorID)
   }
 }
 

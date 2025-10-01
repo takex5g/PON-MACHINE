@@ -29,6 +29,8 @@ interface STEP400API {
   getBusy: (motorID: number) => void
   getHiZ: (motorID: number) => void
   getDir: (motorID: number) => void
+  moveToOpenPosition: (motorID: number) => void
+  moveToClosePosition: (motorID: number) => void
 }
 
 declare global {

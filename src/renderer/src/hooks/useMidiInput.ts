@@ -95,6 +95,11 @@ export const useMidiInput = () => {
 
       setNotes((prev) => [newNote, ...prev].slice(0, 50))
 
+      // Port 1 & 2: Send to STEP400 motor control (OPEN)
+      if (portNum === 1 || portNum === 2) {
+        window.api.step400.moveToOpenPosition(portNum)
+      }
+
       // Send Port3 notes C, D, E, F to ATEM controller
       if (portNum === 3 && ['C', 'D', 'E', 'F'].includes(noteInfo.note)) {
         window.api.midi.sendPort3Note(noteInfo.note)
@@ -113,6 +118,11 @@ export const useMidiInput = () => {
       }
 
       setNotes((prev) => [newNote, ...prev].slice(0, 50))
+
+      // Port 1 & 2: Send to STEP400 motor control (CLOSE)
+      if (portNum === 1 || portNum === 2) {
+        window.api.step400.moveToClosePosition(portNum)
+      }
     }
 
     const cleanupFunctions: (() => void)[] = []

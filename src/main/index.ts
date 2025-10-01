@@ -133,6 +133,14 @@ app.whenReady().then(() => {
     step400.getDir(motorID)
   })
 
+  ipcMain.on('step400:moveToOpenPosition', (_event, motorID: number) => {
+    step400.moveToOpenPosition(motorID)
+  })
+
+  ipcMain.on('step400:moveToClosePosition', (_event, motorID: number) => {
+    step400.moveToClosePosition(motorID)
+  })
+
   // Handle MIDI Port3 notes for ATEM control
   ipcMain.on('midi:port3Note', (_event, note: string) => {
     atemManager.handleMidiNote(note)
