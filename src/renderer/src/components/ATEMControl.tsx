@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const ATEMControl = () => {
-  const [ipAddress, setIpAddress] = useState('169.254.154.142')
+  const [ipAddress, setIpAddress] = useState('')
   const [connected, setConnected] = useState(false)
   const [activeCamera, setActiveCamera] = useState(1)
   const [isConnecting, setIsConnecting] = useState(false)

@@ -68,15 +68,15 @@ const CameraControl: React.FC = () => {
               width: '100px',
               height: '50px',
               borderRadius: '12px',
-              backgroundColor: selectedCamera === cameraNum ? '#4CAF50' : '#fff',
-              border: selectedCamera === cameraNum ? '3px solid #2E7D32' : '2px solid #ccc',
+              backgroundColor: selectedCamera === cameraNum ? '#f44336' : '#fff',
+              border: selectedCamera === cameraNum ? '3px solid #d32f2f' : '2px solid #ccc',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow:
                 selectedCamera === cameraNum
-                  ? '0 4px 12px rgba(76, 175, 80, 0.3)'
+                  ? '0 4px 12px rgba(244, 67, 54, 0.3)'
                   : '0 2px 4px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
               cursor: 'default'
@@ -92,7 +92,7 @@ const CameraControl: React.FC = () => {
             </div>
             <div
               style={{
-                fontSize: '24px',
+                fontSize: '20px',
                 fontWeight: 'bold',
                 color: selectedCamera === cameraNum ? '#fff' : '#666',
                 marginTop: '5px'
@@ -173,7 +173,7 @@ const CameraControl: React.FC = () => {
         </select>
         <span
           style={{
-            color: selectedInput3 ? '#4CAF50' : '#ccc',
+            color: selectedInput3 ? '#d32f2f' : '#ccc',
             fontSize: '14px',
             fontWeight: 'bold'
           }}

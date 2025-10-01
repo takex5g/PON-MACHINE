@@ -1,10 +1,12 @@
 import { Atem } from 'atem-connection'
 import { ipcMain } from 'electron'
 
+const DEFAULT_ATEM_IP = '10.0.0.14'
+
 class ATEMManager {
   private atem: Atem | null = null
   private connected = false
-  private ipAddress = '169.254.154.142'
+  private ipAddress = DEFAULT_ATEM_IP
 
   constructor() {
     this.setupIPCHandlers()
