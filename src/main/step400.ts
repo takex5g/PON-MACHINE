@@ -8,6 +8,8 @@ export class STEP400Controller extends EventEmitter {
   private remoteAddress: string
   private remotePort: number
   private localPort: number
+  private positionReportIntervals: Map<number, NodeJS.Timeout> = new Map()
+  private motorPositions: Map<number, number> = new Map()
 
   constructor(remoteAddress = DEFAULT_STEP400_IP, remotePort = 50000, deviceID = 1) {
     super()
@@ -35,6 +37,7 @@ export class STEP400Controller extends EventEmitter {
     this.udpPort.on('message', (oscMsg) => {
       // Parse and display message in readable format
       const values = oscMsg.args?.map((arg: any) => arg.value) || []
+      console.log(`Received OSC message: ${oscMsg.address}`, values)
 
       switch (oscMsg.address) {
         case '/destIp':
@@ -44,7 +47,8 @@ export class STEP400Controller extends EventEmitter {
           console.log(`Motor ${values[0]} - Microstep Mode: ${values[1]}`)
           break
         case '/position':
-          console.log(`Motor ${values[0]} - Position: ${values[1]}`)
+          this.motorPositions.set(values[0], values[1])
+          this.displayPositions()
           break
         case '/busy':
           console.log(`Motor ${values[0]} - Busy: ${values[1] ? 'Yes' : 'No'}`)
@@ -73,8 +77,29 @@ export class STEP400Controller extends EventEmitter {
     this.udpPort.open()
   }
 
+  setDestIp(ip: string): void {
+    const octets = ip.split('.').map(Number)
+    this.udpPort.send({
+      address: '/setDestIp',
+      args: [
+        { type: 'i', value: octets[0] },
+        { type: 'i', value: octets[1] },
+        { type: 'i', value: octets[2] },
+        { type: 'i', value: octets[3] }
+      ]
+    })
+  }
+
   close(): void {
+    this.stopPositionReport()
     this.udpPort.close()
+  }
+
+  private displayPositions(): void {
+    const pos1 = this.motorPositions.get(1) ?? '---'
+    const pos2 = this.motorPositions.get(2) ?? '---'
+
+    console.log(` Motor 1: ${String(pos1).padStart(8)}  Motor 2: ${String(pos2).padStart(8)} `)
   }
 
   setCurrentMode(motorID: number): void {
@@ -271,5 +296,30 @@ export class STEP400Controller extends EventEmitter {
         { type: 'i', value: enable ? 1 : 0 }
       ]
     })
+  }
+
+  // Start periodic position reporting
+  startPositionReport(motorID: number, intervalMs = 1000): void {
+    this.stopPositionReport(motorID)
+    console.log(`Starting position report for motor ${motorID} every ${intervalMs}ms`)
+    const interval = setInterval(() => {
+      this.getPosition(motorID)
+    }, intervalMs)
+    this.positionReportIntervals.set(motorID, interval)
+  }
+
+  // Stop periodic position reporting
+  stopPositionReport(motorID?: number): void {
+    if (motorID !== undefined) {
+      const interval = this.positionReportIntervals.get(motorID)
+      if (interval) {
+        clearInterval(interval)
+        this.positionReportIntervals.delete(motorID)
+      }
+    } else {
+      // Stop all if no motorID specified
+      this.positionReportIntervals.forEach((interval) => clearInterval(interval))
+      this.positionReportIntervals.clear()
+    }
   }
 }

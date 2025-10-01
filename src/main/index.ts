@@ -59,11 +59,10 @@ app.whenReady().then(() => {
 
   // Enable automatic status reports
   setTimeout(() => {
-    for (let motorID = 1; motorID <= 4; motorID++) {
-      step400.enableBusyReport(motorID, true)
-      step400.enableHizReport(motorID, true)
-      step400.enableMotorStatusReport(motorID, true)
-    }
+    step400.setDestIp('10.0.1.0')
+    // Start position reporting for both motors
+    step400.startPositionReport(1, 1000) // Motor 1, every 1 second
+    step400.startPositionReport(2, 1000) // Motor 2, every 1 second
   }, 1000)
 
   ipcMain.on('step400:setCurrentMode', (_event, motorID: number) => {

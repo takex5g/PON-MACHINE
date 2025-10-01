@@ -66,7 +66,6 @@ const SteppingControl: React.FC = () => {
 
   const handleHome = (): void => {
     window.api.step400.goHome(motorId)
-    setPosition(0)
   }
 
   const handleHoming = (): void => {
