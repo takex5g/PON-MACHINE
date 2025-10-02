@@ -13,6 +13,11 @@ interface TabContainerProps {
 const TabContainer: React.FC<TabContainerProps> = ({ tabs }) => {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id || '')
 
+  const handleEmergencyStop = () => {
+    window.api.step400.softStop(1)
+    window.api.step400.softStop(2)
+  }
+
   return (
     <div
       style={{
@@ -27,7 +32,8 @@ const TabContainer: React.FC<TabContainerProps> = ({ tabs }) => {
           display: 'flex',
           // backgroundColor: '#e0e0e0',
           borderBottom: '2px solid #ccc',
-          padding: '0'
+          padding: '0',
+          alignItems: 'center'
         }}
       >
         {tabs.map((tab) => (
@@ -60,6 +66,31 @@ const TabContainer: React.FC<TabContainerProps> = ({ tabs }) => {
             {tab.label}
           </button>
         ))}
+        <button
+          onClick={handleEmergencyStop}
+          style={{
+            marginLeft: 'auto',
+            marginRight: '20px',
+            padding: '8px 32px',
+            backgroundColor: '#f44336',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            transition: 'background-color 0.3s ease',
+            alignSelf: 'center'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#d32f2f'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#f44336'
+          }}
+        >
+          STOP
+        </button>
       </div>
       <div
         style={{
