@@ -152,13 +152,27 @@ const PonMachineControl: React.FC = () => {
                     <div
                       style={{
                         flex: 1,
-                        height: '2px',
-                        backgroundColor: pair.closeNote ? '#4CAF50' : '#ccc',
+                        height: '24px',
                         position: 'relative',
                         display: 'flex',
                         alignItems: 'center'
                       }}
                     >
+                      {/* アニメーションする矢印本体 */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: 0,
+                          right: 0,
+                          height: '2px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          backgroundColor: pair.closeNote ? '#4CAF50' : '#ccc',
+                          transformOrigin: 'left center',
+                          animation: pair.closeNote ? 'none' : 'arrowGrow 0.4s ease-out forwards'
+                        }}
+                      />
+                      {/* 矢印の先端 */}
                       <div
                         style={{
                           position: 'absolute',
@@ -167,7 +181,10 @@ const PonMachineControl: React.FC = () => {
                           height: 0,
                           borderTop: '6px solid transparent',
                           borderBottom: '6px solid transparent',
-                          borderLeft: `10px solid ${pair.closeNote ? '#4CAF50' : '#ccc'}`
+                          borderLeft: `10px solid ${pair.closeNote ? '#4CAF50' : '#ccc'}`,
+                          animation: pair.closeNote
+                            ? 'none'
+                            : 'arrowHeadGrow 0.4s ease-out forwards'
                         }}
                       />
                       {duration && (
@@ -244,104 +261,132 @@ const PonMachineControl: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        fontFamily: 'monospace',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-    >
-      {/* <h2 style={{ marginBottom: '10px' }}>MIDI Input Monitor</h2> */}
+    <>
+      <style>
+        {`
+          @keyframes arrowGrow {
+            from {
+              transform: scaleX(0);
+            }
+            to {
+              transform: scaleX(1);
+            }
+          }
 
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+          @keyframes arrowHeadGrow {
+            0% {
+              opacity: 0;
+              transform: translateX(-100px);
+            }
+            70% {
+              opacity: 0;
+            }
+            100% {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+        `}
+      </style>
+      <div
+        style={{
+          fontFamily: 'monospace',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        {/* <h2 style={{ marginBottom: '10px' }}>MIDI Input Monitor</h2> */}
 
-      <div style={{ display: 'flex', gap: '20px', flex: 1, minHeight: 0 }}>
-        {/* Port 1 Section */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              marginBottom: '10px',
-              padding: '8px',
-              backgroundColor: '#f0f0f0',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              flexWrap: 'wrap'
-            }}
-          >
-            <span
+        {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+
+        <div style={{ display: 'flex', gap: '20px', flex: 1, minHeight: 0 }}>
+          {/* Port 1 Section */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <div
               style={{
-                fontWeight: 'bold',
-                minWidth: '60px',
-                color: 'black'
+                marginBottom: '10px',
+                padding: '8px',
+                backgroundColor: '#f0f0f0',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                flexWrap: 'wrap'
               }}
             >
-              Port 1:
-            </span>
-            <select
-              value={selectedInput1?.id || ''}
-              onChange={handleInput1Change}
-              style={{ padding: '4px', flex: 1, minWidth: '120px' }}
-              disabled={!isEnabled}
-            >
-              <option value="">None</option>
-              {midiInputs.map((input) => (
-                <option key={input.id} value={input.id}>
-                  {input.name}
-                </option>
-              ))}
-            </select>
-            <span style={{ color: selectedInput1 ? 'green' : '#ccc', fontSize: '14px' }}>
-              {selectedInput1 ? '● Connected' : '○ Not connected'}
-            </span>
+              <span
+                style={{
+                  fontWeight: 'bold',
+                  minWidth: '60px',
+                  color: 'black'
+                }}
+              >
+                Port 1:
+              </span>
+              <select
+                value={selectedInput1?.id || ''}
+                onChange={handleInput1Change}
+                style={{ padding: '4px', flex: 1, minWidth: '120px' }}
+                disabled={!isEnabled}
+              >
+                <option value="">None</option>
+                {midiInputs.map((input) => (
+                  <option key={input.id} value={input.id}>
+                    {input.name}
+                  </option>
+                ))}
+              </select>
+              <span style={{ color: selectedInput1 ? 'green' : '#ccc', fontSize: '14px' }}>
+                {selectedInput1 ? '● Connected' : '○ Not connected'}
+              </span>
+            </div>
+            {renderNoteList(notesPort1, 'Port 1')}
           </div>
-          {renderNoteList(notesPort1, 'Port 1')}
+
+          {/* Port 2 Section */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <div
+              style={{
+                marginBottom: '10px',
+                padding: '8px',
+                backgroundColor: '#f0f0f0',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                flexWrap: 'wrap'
+              }}
+            >
+              <span style={{ fontWeight: 'bold', minWidth: '60px', color: 'black' }}>Port 2:</span>
+              <select
+                value={selectedInput2?.id || ''}
+                onChange={handleInput2Change}
+                style={{ padding: '4px', flex: 1, minWidth: '120px' }}
+                disabled={!isEnabled}
+              >
+                <option value="">None</option>
+                {midiInputs.map((input) => (
+                  <option key={input.id} value={input.id}>
+                    {input.name}
+                  </option>
+                ))}
+              </select>
+              <span style={{ color: selectedInput2 ? 'green' : '#ccc', fontSize: '14px' }}>
+                {selectedInput2 ? '● Connected' : '○ Not connected'}
+              </span>
+            </div>
+            {renderNoteList(notesPort2, 'Port 2')}
+          </div>
         </div>
 
-        {/* Port 2 Section */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              marginBottom: '10px',
-              padding: '8px',
-              backgroundColor: '#f0f0f0',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              flexWrap: 'wrap'
-            }}
-          >
-            <span style={{ fontWeight: 'bold', minWidth: '60px', color: 'black' }}>Port 2:</span>
-            <select
-              value={selectedInput2?.id || ''}
-              onChange={handleInput2Change}
-              style={{ padding: '4px', flex: 1, minWidth: '120px' }}
-              disabled={!isEnabled}
-            >
-              <option value="">None</option>
-              {midiInputs.map((input) => (
-                <option key={input.id} value={input.id}>
-                  {input.name}
-                </option>
-              ))}
-            </select>
-            <span style={{ color: selectedInput2 ? 'green' : '#ccc', fontSize: '14px' }}>
-              {selectedInput2 ? '● Connected' : '○ Not connected'}
-            </span>
-          </div>
-          {renderNoteList(notesPort2, 'Port 2')}
-        </div>
-      </div>
-
-      {/* <div style={{ marginTop: '10px', textAlign: 'center' }}>
+        {/* <div style={{ marginTop: '10px', textAlign: 'center' }}>
         <button onClick={clearNotes} style={{ padding: '10px 20px', fontSize: '16px' }}>
           Clear All Notes
         </button>
       </div> */}
-    </div>
+      </div>
+    </>
   )
 }
 
