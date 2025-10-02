@@ -31,8 +31,8 @@ class ATEMManager {
       }
     })
 
-    ipcMain.handle('atem:switchCamera', async (_, cameraId: number) => {
-      return await this.switchCamera(cameraId)
+    ipcMain.handle('atem:switchCamera', async (_, cameraId: number, velocity?: number) => {
+      return await this.switchCamera(cameraId, velocity)
     })
   }
 
@@ -92,18 +92,30 @@ class ATEMManager {
     }
   }
 
-  async switchCamera(cameraId: number): Promise<{ success: boolean; error?: string }> {
+  async switchCamera(
+    cameraId: number,
+    velocity: number = 64
+  ): Promise<{ success: boolean; error?: string }> {
     if (!this.atem || !this.connected) {
       return { success: false, error: 'ATEM not connected' }
     }
 
     try {
-      // プレビューにカメラを設定
-      await this.atem.changePreviewInput(cameraId, 0)
-      // オートトランジション実行（フェード切り替え）
-      await this.atem.autoTransition(0)
+      if (velocity >= 65) {
+        // velocity 65以上: カット切り替え（直接プログラムに設定）
+        // await this.atem.changeProgramInput(cameraId, 0)
+        await this.atem.changePreviewInput(cameraId, 0)
+        await this.atem.cut(0)
+        console.log(`Cut to camera ${cameraId} (velocity: ${velocity})`)
+      } else {
+        // velocity 65未満: フェード切り替え
+        // プレビューにカメラを設定
+        await this.atem.changePreviewInput(cameraId, 0)
+        // オートトランジション実行（フェード切り替え）
+        await this.atem.autoTransition(0)
+        console.log(`Faded to camera ${cameraId} (velocity: ${velocity})`)
+      }
 
-      console.log(`Faded to camera ${cameraId}`)
       return { success: true }
     } catch (error) {
       console.error('Failed to switch camera:', error)
@@ -111,7 +123,7 @@ class ATEMManager {
     }
   }
 
-  handleMidiNote(note: string) {
+  handleMidiNote(note: string, velocity: number) {
     const cameraMapping: { [key: string]: number } = {
       C: 1,
       D: 2,
@@ -121,7 +133,7 @@ class ATEMManager {
 
     const cameraId = cameraMapping[note]
     if (cameraId) {
-      this.switchCamera(cameraId)
+      this.switchCamera(cameraId, velocity)
     }
   }
 }

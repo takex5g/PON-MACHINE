@@ -102,7 +102,8 @@ export const useMidiInput = () => {
 
       // Send Port3 notes C, D, E, F to ATEM controller
       if (portNum === 3 && ['C', 'D', 'E', 'F'].includes(noteInfo.note)) {
-        window.api.midi.sendPort3Note(noteInfo.note)
+        const velocity = Math.round(e.note.attack * 127)
+        window.api.midi.sendPort3Note(noteInfo.note, velocity)
       }
     }
 

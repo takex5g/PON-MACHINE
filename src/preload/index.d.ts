@@ -8,7 +8,7 @@ interface ATEMAPI {
 }
 
 interface MidiAPI {
-  sendPort3Note: (note: string) => void
+  sendPort3Note: (note: string, velocity: number) => void
 }
 
 interface STEP400API {

@@ -142,8 +142,8 @@ app.whenReady().then(() => {
   })
 
   // Handle MIDI Port3 notes for ATEM control
-  ipcMain.on('midi:port3Note', (_event, note: string) => {
-    atemManager.handleMidiNote(note)
+  ipcMain.on('midi:port3Note', (_event, note: string, velocity: number) => {
+    atemManager.handleMidiNote(note, velocity)
   })
 
   createWindow()

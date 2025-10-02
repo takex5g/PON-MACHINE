@@ -6,10 +6,12 @@ const api = {
     connect: (ip?: string) => ipcRenderer.invoke('atem:connect', ip),
     disconnect: () => ipcRenderer.invoke('atem:disconnect'),
     getStatus: () => ipcRenderer.invoke('atem:getStatus'),
-    switchCamera: (cameraId: number) => ipcRenderer.invoke('atem:switchCamera', cameraId)
+    switchCamera: (cameraId: number, velocity?: number) =>
+      ipcRenderer.invoke('atem:switchCamera', cameraId, velocity)
   },
   midi: {
-    sendPort3Note: (note: string) => ipcRenderer.send('midi:port3Note', note)
+    sendPort3Note: (note: string, velocity: number) =>
+      ipcRenderer.send('midi:port3Note', note, velocity)
   },
   step400: {
     setCurrentMode: (motorID: number) => ipcRenderer.send('step400:setCurrentMode', motorID),
