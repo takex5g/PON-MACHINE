@@ -35,7 +35,6 @@ export class STEP400Controller extends EventEmitter {
     })
 
     this.udpPort.on('message', (oscMsg) => {
-      // Parse and display message in readable format
       const values = oscMsg.args?.map((arg: any) => arg.value) || []
       console.log(`Received OSC message: ${oscMsg.address}`, values)
 
@@ -323,13 +322,77 @@ export class STEP400Controller extends EventEmitter {
     }
   }
 
-  // Custom helper: Move motor to close position (-3000)
+  // Custom helper: Move motor to close position (-5000)
+  // Uses high TVAL (strong torque) and slow speed for closing
   moveToClosePosition(motorID: number): void {
-    this.goTo(motorID, -5000)
+    console.log('CLOSE')
+    const closeTval = 60 // Strong torque
+    const closeSpeed = 400 // Slow speed
+
+    // Set TVAL for closing
+    this.udpPort.send({
+      address: '/setTval',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'i', value: 2 }, // TVAL_HOLD
+        { type: 'i', value: closeTval }, // TVAL_RUN
+        { type: 'i', value: closeTval }, // TVAL_ACC
+        { type: 'i', value: closeTval } // TVAL_DEC
+      ]
+    })
+
+    // Set speed profile for closing
+    this.udpPort.send({
+      address: '/setSpeedProfile',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'f', value: 2000.0 }, // acc
+        { type: 'f', value: 2000.0 }, // dec
+        { type: 'f', value: closeSpeed } // maxSpeed
+      ]
+    })
+
+    //モーターID1の場合は-3900, モーターID2の場合は-2700動かす
+    if (motorID === 1) {
+      this.goTo(motorID, -3900)
+    } else if (motorID === 2) {
+      this.goTo(motorID, -2700)
+    }
   }
 
   // Custom helper: Move motor to open position (home: 0)
+  // Uses low TVAL (less torque) and high speed for opening
   moveToOpenPosition(motorID: number): void {
+    console.log('OPEN')
+    const openTval = 9 // Light torque
+    const openSpeed = 900 // Fast speed
+
+    // Set TVAL for opening
+    this.udpPort.send({
+      address: '/setTval',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'i', value: 2 }, // TVAL_HOLD
+        { type: 'i', value: openTval }, // TVAL_RUN
+        { type: 'i', value: openTval }, // TVAL_ACC
+        { type: 'i', value: openTval } // TVAL_DEC
+      ]
+    })
+
+    // Set speed profile for opening
+    this.udpPort.send({
+      address: '/setSpeedProfile',
+      args: [
+        { type: 'i', value: motorID },
+        { type: 'f', value: 2000.0 }, // acc
+        { type: 'f', value: 2000.0 }, // dec
+        { type: 'f', value: openSpeed } // maxSpeed
+      ]
+    })
+
+    // Execute movement
+    // setTimeout(() => {
     this.goHome(motorID)
+    // }, 100)
   }
 }

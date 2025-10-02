@@ -16,11 +16,9 @@ const SteppingControl: React.FC = () => {
   const [motorId, setMotorId] = useState(1)
   const [tval, setTval] = useState(9)
   const [speed, setSpeed] = useState(620)
-  const [direction, setDirection] = useState<'forward' | 'reverse'>('forward')
   const [position, setPosition] = useState(0)
-  const [isRunning, setIsRunning] = useState(false)
   const [isHoming, setIsHoming] = useState(false)
-  const [stepMode, setStepMode] = useState(7) // デフォルト: 1/128マイクロステップ
+  const [stepMode, setStepMode] = useState(4) // デフォルト: 1/128マイクロステップ
 
   const handleInit = (): void => {
     window.api.step400.setCurrentMode(motorId)
@@ -41,19 +39,8 @@ const SteppingControl: React.FC = () => {
     window.api.step400.setSpeed(motorId, newSpeed)
   }
 
-  const handleRun = (): void => {
-    window.api.step400.setTval(motorId, tval)
-    setTimeout(() => {
-      const actualSpeed = direction === 'forward' ? speed : -speed
-      window.api.step400.setSpeed(motorId, Math.abs(speed))
-      window.api.step400.run(motorId, actualSpeed)
-      setIsRunning(true)
-    }, 200)
-  }
-
   const handleStop = (): void => {
     window.api.step400.softHiZ(motorId)
-    setIsRunning(false)
   }
 
   const handleGoTo = (): void => {
@@ -179,24 +166,6 @@ const SteppingControl: React.FC = () => {
             <strong>{STEP_MODES[stepMode].label}:</strong> {STEP_MODES[stepMode].description}
           </div>
         </div>
-
-        <div
-          style={{
-            fontSize: '12px',
-            color: '#d32f2f',
-            backgroundColor: '#ffebee',
-            padding: '8px',
-            borderRadius: '4px',
-            border: '1px solid #ffcdd2'
-          }}
-        >
-          <strong>推奨設定:</strong>
-          <br />
-          • 高速動作・脱調回避: フルステップ (0)
-          <br />
-          • バランス重視: 1/8マイクロステップ (3)
-          <br />• 高精度必要: 1/16マイクロステップ (4)
-        </div>
       </div>
 
       {/* Speed and TVAL Controls */}
@@ -260,7 +229,7 @@ const SteppingControl: React.FC = () => {
         </div>
       </div>
 
-      {/* Run Controls */}
+      {/* Homing and Stop Controls */}
       <div
         style={{
           padding: '15px',
@@ -269,52 +238,45 @@ const SteppingControl: React.FC = () => {
           border: '1px solid #ddd'
         }}
       >
-        <h3 style={{ marginBottom: '15px', fontSize: '16px' }}>Run Control</h3>
+        <h3 style={{ marginBottom: '15px', fontSize: '16px' }}>Homing (原点復帰)</h3>
 
-        {/* Direction Selection */}
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-            Direction:
-          </label>
-          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <input
-                type="radio"
-                value="forward"
-                checked={direction === 'forward'}
-                onChange={(e) => setDirection(e.target.value as 'forward' | 'reverse')}
-              />
-              <span>Forward (正転)</span>
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <input
-                type="radio"
-                value="reverse"
-                checked={direction === 'reverse'}
-                onChange={(e) => setDirection(e.target.value as 'forward' | 'reverse')}
-              />
-              <span>Reverse (逆転)</span>
-            </label>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+        <div
+          style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '15px' }}
+        >
           <button
-            onClick={handleRun}
-            disabled={isRunning}
+            onClick={handleHoming}
+            disabled={isHoming}
             style={{
               padding: '12px 24px',
-              backgroundColor: isRunning ? '#ccc' : '#4CAF50',
+              backgroundColor: isHoming ? '#FFA726' : '#FF6B35',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
-              cursor: isRunning ? 'not-allowed' : 'pointer',
+              cursor: isHoming ? 'not-allowed' : 'pointer',
               fontSize: '16px',
               fontWeight: 'bold'
             }}
           >
-            {isRunning ? 'Running...' : `Run ${direction === 'forward' ? '→' : '←'}`}
+            {isHoming ? 'Homing...' : 'Start Homing'}
           </button>
+          <button
+            onClick={handleHome}
+            disabled={isHoming}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: '#607D8B',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: isHoming ? 'not-allowed' : 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            Go Home (0)
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <button
             onClick={handleStop}
             style={{
@@ -329,52 +291,6 @@ const SteppingControl: React.FC = () => {
             }}
           >
             Stop
-          </button>
-        </div>
-      </div>
-
-      {/* Homing Controls */}
-      <div
-        style={{
-          padding: '15px',
-          backgroundColor: '#f5f5f5',
-          borderRadius: '8px',
-          border: '1px solid #ddd'
-        }}
-      >
-        <h3 style={{ marginBottom: '15px', fontSize: '16px' }}>Homing (原点復帰)</h3>
-
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-          <button
-            onClick={handleHoming}
-            disabled={isHoming || isRunning}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: isHoming ? '#FFA726' : '#FF6B35',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: isHoming || isRunning ? 'not-allowed' : 'pointer',
-              fontSize: '16px',
-              fontWeight: 'bold'
-            }}
-          >
-            {isHoming ? 'Homing...' : 'Start Homing'}
-          </button>
-          <button
-            onClick={handleHome}
-            disabled={isHoming || isRunning}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#607D8B',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: isHoming || isRunning ? 'not-allowed' : 'pointer',
-              fontSize: '16px'
-            }}
-          >
-            Go Home (0)
           </button>
         </div>
       </div>
@@ -472,9 +388,9 @@ const SteppingControl: React.FC = () => {
       <div
         style={{
           padding: '15px',
-          backgroundColor: isHoming ? '#fff3e0' : isRunning ? '#e8f5e9' : '#f5f5f5',
+          backgroundColor: isHoming ? '#fff3e0' : '#f5f5f5',
           borderRadius: '8px',
-          border: `1px solid ${isHoming ? '#FF6B35' : isRunning ? '#4CAF50' : '#ddd'}`
+          border: `1px solid ${isHoming ? '#FF6B35' : '#ddd'}`
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -483,12 +399,10 @@ const SteppingControl: React.FC = () => {
               width: '12px',
               height: '12px',
               borderRadius: '50%',
-              backgroundColor: isHoming ? '#FF6B35' : isRunning ? '#4CAF50' : '#ccc'
+              backgroundColor: isHoming ? '#FF6B35' : '#ccc'
             }}
           />
-          <span style={{ fontWeight: 'bold' }}>
-            Status: {isHoming ? 'Homing' : isRunning ? 'Running' : 'Stopped'}
-          </span>
+          <span style={{ fontWeight: 'bold' }}>Status: {isHoming ? 'Homing' : 'Stopped'}</span>
         </div>
       </div>
     </div>
