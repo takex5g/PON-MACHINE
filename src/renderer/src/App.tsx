@@ -15,13 +15,14 @@ function App(): React.JSX.Element {
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px'
+            gap: '10px',
+            minHeight: 0
           }}
         >
-          <div style={{ flex: '0 0 70%' }}>
+          <div style={{ flex: '7', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             <PonMachineControl />
           </div>
-          <div style={{ flex: '0 0 30%' }}>
+          <div style={{ flex: '3', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             <CameraControl />
           </div>
         </div>

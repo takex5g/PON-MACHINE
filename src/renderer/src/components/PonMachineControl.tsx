@@ -291,9 +291,10 @@ const PonMachineControl: React.FC = () => {
       <div
         style={{
           fontFamily: 'monospace',
-          height: '100%',
+          flex: 1,
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          minHeight: 0
         }}
       >
         {/* <h2 style={{ marginBottom: '10px' }}>MIDI Input Monitor</h2> */}
@@ -302,7 +303,7 @@ const PonMachineControl: React.FC = () => {
 
         <div style={{ display: 'flex', gap: '20px', flex: 1, minHeight: 0 }}>
           {/* Port 1 Section */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
             <div
               style={{
                 marginBottom: '10px',
@@ -312,7 +313,8 @@ const PonMachineControl: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
-                flexWrap: 'wrap'
+                flexWrap: 'wrap',
+                flexShrink: 0
               }}
             >
               <span
@@ -345,7 +347,7 @@ const PonMachineControl: React.FC = () => {
           </div>
 
           {/* Port 2 Section */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
             <div
               style={{
                 marginBottom: '10px',
@@ -355,7 +357,8 @@ const PonMachineControl: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
-                flexWrap: 'wrap'
+                flexWrap: 'wrap',
+                flexShrink: 0
               }}
             >
               <span style={{ fontWeight: 'bold', minWidth: '60px', color: 'black' }}>Port 2:</span>

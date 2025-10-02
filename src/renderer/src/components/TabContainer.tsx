@@ -97,7 +97,10 @@ const TabContainer: React.FC<TabContainerProps> = ({ tabs }) => {
           flex: 1,
           padding: '20px',
           backgroundColor: '#ffffff',
-          overflow: 'auto'
+          overflow: 'hidden',
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column'
         }}
       >
         {tabs.find((tab) => tab.id === activeTab)?.content}

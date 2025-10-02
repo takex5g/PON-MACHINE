@@ -13,7 +13,6 @@ const CameraControl: React.FC = () => {
   } = useMidiInput()
 
   const [selectedCamera, setSelectedCamera] = useState<number | null>(null)
-  const [lastSwitchTime, setLastSwitchTime] = useState<string>('')
 
   const handleInput3Change = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     handleInputChange3(e.target.value)
@@ -36,7 +35,6 @@ const CameraControl: React.FC = () => {
       const camera = getCameraFromNote(latestNote.note)
       if (camera) {
         setSelectedCamera(camera)
-        setLastSwitchTime(new Date(latestNote.timestamp).toLocaleTimeString())
       }
     }
   }, [notesPort3])
@@ -185,22 +183,6 @@ const CameraControl: React.FC = () => {
       {/* カメラ状態表示 */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {renderCameraButtons()}
-        {selectedCamera && lastSwitchTime && (
-          <div
-            style={{
-              marginTop: '20px',
-              textAlign: 'center',
-              fontSize: '14px',
-              color: '#666',
-              backgroundColor: '#fff',
-              padding: '10px',
-              borderRadius: '6px',
-              border: '1px solid #ddd'
-            }}
-          >
-            現在選択: カメラ {selectedCamera} (切り替え時刻: {lastSwitchTime})
-          </div>
-        )}
       </div>
     </div>
   )
