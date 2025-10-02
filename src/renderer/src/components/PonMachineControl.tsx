@@ -1,6 +1,13 @@
 import React, { JSX } from 'react'
 import { useMidiInput, MidiNote } from '../hooks/useMidiInput'
 
+interface NotePair {
+  id: string
+  openNote: MidiNote
+  closeNote: MidiNote | null
+  startTime: number
+}
+
 const PonMachineControl: React.FC = () => {
   const {
     midiInputs,
@@ -23,56 +30,218 @@ const PonMachineControl: React.FC = () => {
     handleInputChange2(e.target.value)
   }
 
-  const renderNoteList = (portNotes: MidiNote[], portLabel: string): JSX.Element => (
-    <div
-      style={{
-        border: '1px solid #ccc',
-        padding: '10px',
-        flex: 1,
-        overflowY: 'auto',
-        backgroundColor: '#f5f5f5',
-        minHeight: 0
-      }}
-    >
-      {portNotes.length === 0 ? (
-        <p style={{ color: '#999' }}>{portLabel} - No notes received</p>
-      ) : (
-        <div>
-          {portNotes.map((note) => (
-            <div
-              key={note.id}
-              style={{
-                padding: '8px',
-                margin: '5px 0',
-                backgroundColor: 'white',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <div>
-                <span
+  // OPEN→CLOSEをペア化する関数
+  const pairNotes = (notes: MidiNote[]): NotePair[] => {
+    const pairs: NotePair[] = []
+    let pendingOpen: MidiNote | null = null
+
+    // notesは新→古の順なので、逆順にして古→新で処理
+    const sortedNotes = [...notes].reverse()
+
+    for (const note of sortedNotes) {
+      if (note.velocity > 0) {
+        // OPEN
+        if (pendingOpen) {
+          // 前のOPENがCLOSEされていない場合、単独でペア化
+          pairs.push({
+            id: pendingOpen.id,
+            openNote: pendingOpen,
+            closeNote: null,
+            startTime: pendingOpen.timestamp
+          })
+        }
+        pendingOpen = note
+      } else {
+        // CLOSE
+        if (pendingOpen) {
+          pairs.push({
+            id: pendingOpen.id,
+            openNote: pendingOpen,
+            closeNote: note,
+            startTime: pendingOpen.timestamp
+          })
+          pendingOpen = null
+        }
+      }
+    }
+
+    // 最後にOPENが残っている場合
+    if (pendingOpen) {
+      pairs.push({
+        id: pendingOpen.id,
+        openNote: pendingOpen,
+        closeNote: null,
+        startTime: pendingOpen.timestamp
+      })
+    }
+
+    return pairs.reverse() // 最新を上に
+  }
+
+  const renderNoteList = (portNotes: MidiNote[], portLabel: string): JSX.Element => {
+    const pairs = pairNotes(portNotes)
+
+    return (
+      <div
+        style={{
+          border: '1px solid #ccc',
+          padding: '10px',
+          flex: 1,
+          overflowY: 'auto',
+          backgroundColor: '#f5f5f5',
+          minHeight: 0
+        }}
+      >
+        {pairs.length === 0 ? (
+          <p style={{ color: '#999' }}>{portLabel} - No notes received</p>
+        ) : (
+          <div>
+            {pairs.map((pair) => {
+              const duration = pair.closeNote
+                ? ((pair.closeNote.timestamp - pair.openNote.timestamp) / 1000).toFixed(1)
+                : null
+
+              return (
+                <div
+                  key={pair.id}
                   style={{
-                    fontWeight: 'bold',
-                    fontSize: '18px',
-                    marginRight: '15px',
-                    color: note.velocity > 0 ? '#4CAF50' : '#f44336'
+                    padding: '12px',
+                    margin: '8px 0',
+                    backgroundColor: 'white',
+                    border: '1px solid #ddd',
+                    borderRadius: '6px'
                   }}
                 >
-                  {note.velocity > 0 ? 'OPEN' : 'CLOSE'}
-                </span>
-              </div>
-              <div style={{ fontSize: '12px', color: '#999' }}>
-                {new Date(note.timestamp).toLocaleTimeString()}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
+                  {/* メインの横並び表示 */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '15px',
+                      marginBottom: '8px'
+                    }}
+                  >
+                    {/* OPEN */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '12px',
+                          height: '12px',
+                          borderRadius: '50%',
+                          backgroundColor: '#4CAF50'
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontWeight: 'bold',
+                          fontSize: '16px',
+                          color: '#4CAF50'
+                        }}
+                      >
+                        OPEN
+                      </span>
+                    </div>
+
+                    {/* 矢印 */}
+                    <div
+                      style={{
+                        flex: 1,
+                        height: '2px',
+                        backgroundColor: pair.closeNote ? '#4CAF50' : '#ccc',
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: 'absolute',
+                          right: '-6px',
+                          width: 0,
+                          height: 0,
+                          borderTop: '6px solid transparent',
+                          borderBottom: '6px solid transparent',
+                          borderLeft: `10px solid ${pair.closeNote ? '#4CAF50' : '#ccc'}`
+                        }}
+                      />
+                      {duration && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            backgroundColor: 'white',
+                            padding: '2px 8px',
+                            fontSize: '11px',
+                            color: '#666',
+                            borderRadius: '3px',
+                            border: '1px solid #ddd'
+                          }}
+                        >
+                          {duration}s
+                        </div>
+                      )}
+                    </div>
+
+                    {/* CLOSE */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '12px',
+                          height: '12px',
+                          borderRadius: '50%',
+                          backgroundColor: pair.closeNote ? '#f44336' : '#ccc'
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontWeight: 'bold',
+                          fontSize: '16px',
+                          color: pair.closeNote ? '#f44336' : '#ccc'
+                        }}
+                      >
+                        CLOSE
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* タイムスタンプ */}
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      color: '#999',
+                      textAlign: 'right'
+                    }}
+                  >
+                    {new Date(pair.openNote.timestamp).toLocaleTimeString()}
+                    {pair.closeNote &&
+                      ` → ${new Date(pair.closeNote.timestamp).toLocaleTimeString()}`}
+                    {!pair.closeNote && (
+                      <span style={{ marginLeft: '8px', color: '#ff9800', fontWeight: 'bold' }}>
+                        進行中...
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div
