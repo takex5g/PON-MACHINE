@@ -130,21 +130,20 @@ const CameraControl: React.FC = () => {
       <div
         style={{
           marginBottom: '10px',
-          padding: '10px',
+          padding: '8px',
           backgroundColor: '#f0f0f0',
-          borderRadius: '8px',
+          borderRadius: '4px',
           display: 'flex',
           alignItems: 'center',
-          gap: '15px',
+          gap: '10px',
           flexWrap: 'wrap'
         }}
       >
         <span
           style={{
             fontWeight: 'bold',
-            minWidth: '100px',
-            color: 'black',
-            fontSize: '16px'
+            minWidth: '60px',
+            color: 'black'
           }}
         >
           カメラ制御:
@@ -152,14 +151,7 @@ const CameraControl: React.FC = () => {
         <select
           value={selectedInput3?.id || ''}
           onChange={handleInput3Change}
-          style={{
-            padding: '8px 12px',
-            flex: 1,
-            minWidth: '200px',
-            borderRadius: '4px',
-            border: '1px solid #ccc',
-            fontSize: '14px'
-          }}
+          style={{ padding: '4px', flex: 1, minWidth: '120px' }}
           disabled={!isEnabled}
         >
           <option value="">None</option>
@@ -169,13 +161,7 @@ const CameraControl: React.FC = () => {
             </option>
           ))}
         </select>
-        <span
-          style={{
-            color: selectedInput3 ? '#d32f2f' : '#ccc',
-            fontSize: '14px',
-            fontWeight: 'bold'
-          }}
-        >
+        <span style={{ color: selectedInput3 ? 'green' : '#ccc', fontSize: '14px' }}>
           {selectedInput3 ? '● Connected' : '○ Not connected'}
         </span>
       </div>
