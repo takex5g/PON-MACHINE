@@ -14,8 +14,8 @@ const TabContainer: React.FC<TabContainerProps> = ({ tabs }) => {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id || '')
 
   const handleEmergencyStop = () => {
-    window.api.step400.softStop(1)
-    window.api.step400.softStop(2)
+    window.api.step400.softHiZ(1)
+    window.api.step400.softHiZ(2)
   }
 
   return (

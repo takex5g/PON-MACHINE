@@ -147,7 +147,7 @@ const CameraControl: React.FC = () => {
             fontSize: '16px'
           }}
         >
-          MIDI入力:
+          カメラ制御:
         </span>
         <select
           value={selectedInput3?.id || ''}

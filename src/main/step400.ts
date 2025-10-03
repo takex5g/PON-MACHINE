@@ -356,7 +356,7 @@ export class STEP400Controller extends EventEmitter {
     if (motorID === 1) {
       this.goTo(motorID, -3900)
     } else if (motorID === 2) {
-      this.goTo(motorID, -2700)
+      this.goTo(motorID, -2900)
     }
   }
 

@@ -324,7 +324,7 @@ const PonMachineControl: React.FC = () => {
                   color: 'black'
                 }}
               >
-                Port 1:
+                マシン 1:
               </span>
               <select
                 value={selectedInput1?.id || ''}
@@ -361,7 +361,9 @@ const PonMachineControl: React.FC = () => {
                 flexShrink: 0
               }}
             >
-              <span style={{ fontWeight: 'bold', minWidth: '60px', color: 'black' }}>Port 2:</span>
+              <span style={{ fontWeight: 'bold', minWidth: '60px', color: 'black' }}>
+                マシン 2:
+              </span>
               <select
                 value={selectedInput2?.id || ''}
                 onChange={handleInput2Change}
