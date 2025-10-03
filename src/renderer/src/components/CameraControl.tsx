@@ -13,6 +13,7 @@ const CameraControl: React.FC = () => {
   } = useMidiInput()
 
   const [selectedCamera, setSelectedCamera] = useState<number | null>(null)
+  const [transitionMode, setTransitionMode] = useState<'fade' | 'cut' | null>(null)
 
   const handleInput3Change = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     handleInputChange3(e.target.value)
@@ -28,13 +29,15 @@ const CameraControl: React.FC = () => {
     return cameraMapping[note] || null
   }
 
-  // 最新のノートからカメラを更新
+  // 最新のノートからカメラとトランジションモードを更新
   useEffect(() => {
     if (notesPort3.length > 0) {
       const latestNote = notesPort3[0]
       const camera = getCameraFromNote(latestNote.note)
       if (camera) {
         setSelectedCamera(camera)
+        // velocity 65以上でカット、65未満でフェード
+        setTransitionMode(latestNote.velocity >= 65 ? 'cut' : 'fade')
       }
     }
   }, [notesPort3])
@@ -45,10 +48,7 @@ const CameraControl: React.FC = () => {
         display: 'flex',
         gap: '20px',
         justifyContent: 'center',
-        padding: '10px',
-        backgroundColor: '#f5f5f5',
-        borderRadius: '8px',
-        border: '1px solid #ddd'
+        padding: '10px'
       }}
     >
       {[1, 2, 3, 4].map((cameraNum) => (
@@ -167,8 +167,31 @@ const CameraControl: React.FC = () => {
       </div>
 
       {/* カメラ状態表示 */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {renderCameraButtons()}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+        <div
+          style={{
+            backgroundColor: '#f5f5f5',
+            borderRadius: '8px',
+            border: '1px solid #ddd'
+          }}
+        >
+          {renderCameraButtons()}
+
+          {/* トランジションモード表示 */}
+          {transitionMode && (
+            <div
+              style={{
+                borderRadius: '4px',
+                textAlign: 'center',
+                fontSize: '12px',
+                color: '#666'
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>切り替えモード:</span>{' '}
+              {transitionMode === 'cut' ? 'カット' : 'フェード'}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

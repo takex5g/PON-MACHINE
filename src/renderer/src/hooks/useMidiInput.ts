@@ -53,19 +53,21 @@ export const useMidiInput = () => {
         const inputs = WebMidi.inputs
         console.log(
           'Available MIDI inputs:',
-          inputs.map((i) => i.name)
+          inputs.map((i) => ({ id: i.id, name: i.name }))
         )
         setMidiInputs(inputs)
 
-        if (inputs.length > 0) {
-          setSelectedInput1(inputs[0])
-        }
-        if (inputs.length > 1) {
-          setSelectedInput2(inputs[1])
-        }
-        if (inputs.length > 2) {
-          setSelectedInput3(inputs[2])
-        }
+        // Port 1: デバイス名に「ポン1」が含まれるものを優先
+        const port1Device = inputs.find((i) => i.name.includes('ポン1'))
+        setSelectedInput1(port1Device || null)
+
+        // Port 2: デバイス名に「ポン2」が含まれるものを優先
+        const port2Device = inputs.find((i) => i.name.includes('ポン2'))
+        setSelectedInput2(port2Device || null)
+
+        // Port 3: デバイス名に「カメラ」が含まれるものを優先、なければ3番目
+        const port3Device = inputs.find((i) => i.name.includes('カメラ'))
+        setSelectedInput3(port3Device || (inputs.length > 2 ? inputs[2] : null))
       } catch (err) {
         console.error('Failed to enable WebMidi:', err)
         setError('Failed to enable WebMidi. Please check browser compatibility.')
@@ -82,6 +84,12 @@ export const useMidiInput = () => {
   }, [])
 
   useEffect(() => {
+    console.log('Setting up MIDI listeners:', {
+      port1: selectedInput1?.name || 'none',
+      port2: selectedInput2?.name || 'none',
+      port3: selectedInput3?.name || 'none'
+    })
+
     const handleNoteOn = (portNum: number) => (e: NoteMessageEvent) => {
       const noteInfo = getNoteFromNumber(e.note.number)
       const newNote: MidiNote = {
@@ -197,7 +205,9 @@ export const useMidiInput = () => {
 
   const handleInputChange1 = useCallback(
     (inputId: string) => {
+      console.log('Port 1 change requested:', inputId)
       const input = midiInputs.find((i) => i.id === inputId)
+      console.log('Port 1 found input:', input?.name || 'none')
       setSelectedInput1(input || null)
     },
     [midiInputs]
@@ -205,7 +215,9 @@ export const useMidiInput = () => {
 
   const handleInputChange2 = useCallback(
     (inputId: string) => {
+      console.log('Port 2 change requested:', inputId)
       const input = midiInputs.find((i) => i.id === inputId)
+      console.log('Port 2 found input:', input?.name || 'none')
       setSelectedInput2(input || null)
     },
     [midiInputs]
@@ -213,7 +225,9 @@ export const useMidiInput = () => {
 
   const handleInputChange3 = useCallback(
     (inputId: string) => {
+      console.log('Port 3 change requested:', inputId)
       const input = midiInputs.find((i) => i.id === inputId)
+      console.log('Port 3 found input:', input?.name || 'none')
       setSelectedInput3(input || null)
     },
     [midiInputs]
