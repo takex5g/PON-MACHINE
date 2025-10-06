@@ -137,15 +137,32 @@ const PonMachineControl: React.FC = () => {
                           backgroundColor: '#4CAF50'
                         }}
                       />
-                      <span
+                      <div
                         style={{
-                          fontWeight: 'bold',
-                          fontSize: '16px',
-                          color: '#4CAF50'
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center'
                         }}
                       >
-                        OPEN
-                      </span>
+                        <span
+                          style={{
+                            fontWeight: 'bold',
+                            fontSize: '16px',
+                            color: '#4CAF50'
+                          }}
+                        >
+                          OPEN
+                        </span>
+                        <div
+                          style={{
+                            fontSize: '10px',
+                            color: '#4CAF50',
+                            marginTop: '2px'
+                          }}
+                        >
+                          (ポン!)
+                        </div>
+                      </div>
                     </div>
 
                     {/* 矢印 */}
