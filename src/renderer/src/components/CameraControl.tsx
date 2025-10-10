@@ -1,5 +1,5 @@
 import React, { JSX, useState, useEffect } from 'react'
-import { useMidiInput } from '../hooks/useMidiInput'
+import { useMidiInput } from '../contexts/MidiInputContext'
 
 const CameraControl: React.FC = () => {
   const {

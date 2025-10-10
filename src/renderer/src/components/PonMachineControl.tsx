@@ -1,5 +1,5 @@
 import React, { JSX } from 'react'
-import { useMidiInput, MidiNote } from '../hooks/useMidiInput'
+import { useMidiInput, MidiNote } from '../contexts/MidiInputContext'
 
 interface NotePair {
   id: string

@@ -3,6 +3,7 @@ import PonMachineControl from './components/PonMachineControl'
 import CameraControl from './components/CameraControl'
 import SteppingControl from './components/SteppingControl'
 import ATEMControl from './components/ATEMControl'
+import { MidiInputProvider } from './contexts/MidiInputContext'
 
 function App(): React.JSX.Element {
   const tabs = [
@@ -41,15 +42,17 @@ function App(): React.JSX.Element {
   ]
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100vh',
-        overflow: 'hidden'
-      }}
-    >
-      <TabContainer tabs={tabs} />
-    </div>
+    <MidiInputProvider>
+      <div
+        style={{
+          width: '100%',
+          height: '100vh',
+          overflow: 'hidden'
+        }}
+      >
+        <TabContainer tabs={tabs} />
+      </div>
+    </MidiInputProvider>
   )
 }
 
