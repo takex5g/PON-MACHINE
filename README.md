@@ -12,11 +12,12 @@ Electron + React + TypeScript で構築された、MIDI信号による自動化�
 - Port 1/2: 複数の筒を個別制御
 - ノートON/OFFで開閉を切り替え
 
-### 2. BlackMagic ATEMスイッチャー制御（未実装）
+### 2. BlackMagic ATEMスイッチャー制御
 
 - Port 3: ATEMスイッチャー制御用MIDI入力
 - MIDI信号でカメラ切り替えを制御
-- 現在は未実装
+- ノートC/D/E/F → カメラ1/2/3/4に対応
+- Auto Transition（フェード切り替え）対応
 
 ### 3. ステッピングモーター制御
 
@@ -29,7 +30,9 @@ Electron + React + TypeScript で構築された、MIDI信号による自動化�
 
 - **フロントエンド**: React 19 + TypeScript
 - **デスクトップ**: Electron 38
-- **通信**: OSC（UDP） - STEP400コントローラー
+- **通信**:
+  - OSC（UDP） - STEP400コントローラー
+  - atem-connection - ATEMスイッチャー
 - **MIDI**: Web MIDI API
 - **ビルド**: electron-vite + electron-builder
 
@@ -37,13 +40,7 @@ Electron + React + TypeScript で構築された、MIDI信号による自動化�
 
 - STEP400コントローラー: `10.0.0.101:50000`
 - ローカルポート: `50101` (deviceID=1の場合)
-
-## 想定される使用シーン
-
-- 卒業式で証書授与時に筒を自動開閉
-- ATEMスイッチャーでカメラ切り替え（未実装）
-- 複数名の授与を順次制御
-- 手動操作を減らし、進行を安定化
+- ATEMスイッチャー: `10.0.0.14`
 
 ## 開発環境
 
