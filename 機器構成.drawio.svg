@@ -1,0 +1,165 @@
+<mxfile host="65bd71144e">
+    <diagram id="detailed-wiring" name="配線図_詳細">
+        <mxGraphModel dx="1158" dy="938" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2970" pageHeight="2100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="9" value="Macbook Pro" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=13;align=center;verticalAlign=top;horizontal=1;" vertex="1" parent="1">
+                    <mxGeometry x="830" y="440" width="280" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="ableton" value="Ableton Live" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="468" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="midi_atem" value="MIDI・ATEM変換ソフト&lt;br&gt;（Node.js/ATEM SDK）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="564" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="scarlett" value="オーディオインターフェース Scarlett&#xa;（ダイレクトモニター）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1225" y="726" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="mic1" value="マイク1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1230" y="600" width="90" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="mic2" value="マイク2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1385" y="600" width="90" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="speaker" value="スピーカー&lt;br&gt;（Micro Monitor）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1255" y="866" width="220" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="atem" value="ATEM mini pro" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="740" y="800" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cam1" value="カメラ1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="730" width="90" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="cam2" value="カメラ2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="790" width="90" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="cam3" value="カメラ3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="850" width="90" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="splitter" value="HDMI 複製" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="710" y="340" width="170" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="mon1" value="モニター" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="240" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="mon2" value="モニター" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="790" y="240" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" value="LAN" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#999999;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="15" target="atem" edge="1">
+                    <mxGeometry x="-0.0007" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="960" y="780"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e3" value="HDMI&#xa;（テロップmp4送出）" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#000000;fontSize=11;" parent="1" source="ableton" target="atem" edge="1">
+                    <mxGeometry x="0.3382" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="890" y="680"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e4" value="HDMI OUT" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#000000;fontSize=11;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="790.0000000000001" y="800" as="sourcePoint"/>
+                        <mxPoint x="790.0000000000001" y="390" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e5" value="HDMI" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#000000;fontSize=11;" parent="1" source="splitter" target="mon1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" value="HDMI" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#000000;fontSize=11;" parent="1" source="splitter" target="mon2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7" value="HDMI" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#000000;fontSize=11;" parent="1" source="cam1" target="atem" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" value="HDMI" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#000000;fontSize=11;" parent="1" source="cam2" target="atem" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e9" value="HDMI" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#000000;fontSize=11;" parent="1" source="cam3" target="atem" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e12" value="XLR / TRS" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#b85450;fontSize=11;" parent="1" source="mic2" target="scarlett" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e13" value="LINE OUT" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#666666;fontSize=11;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="scarlett" target="speaker" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1375" y="840" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="XLR / TRS" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#b85450;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="mic1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1275" y="640" as="sourcePoint"/>
+                        <mxPoint x="1275" y="726" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" value="USB&#xa;(BGM再生)" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#999999;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ableton" target="scarlett">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="990" y="585" as="sourcePoint"/>
+                        <mxPoint x="950" y="840" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1190" y="660"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="10" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#6c8ebf;exitX=0.583;exitY=0.995;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.214;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="midi_atem">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="969.8999999999999" y="527.9999999999999" as="sourcePoint"/>
+                        <mxPoint x="970.11" y="550.3" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#6c8ebf;exitX=0.834;exitY=1.003;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="midi_atem">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1009.9399999999999" y="528.1800000000001" as="sourcePoint"/>
+                        <mxPoint x="1009.9" y="550" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e1" value="" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#6c8ebf;elbow=vertical;" parent="1" source="ableton" target="midi_atem" edge="1">
+                    <mxGeometry x="-0.021" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="990" y="540"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-size: 11px; background-color: rgb(255, 255, 255);&quot;&gt;マシン1・2 /カメラ制御MIDI信号&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="905" y="525" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="LANハブ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;fontColor=#333333;" vertex="1" parent="1">
+                    <mxGeometry x="950" y="688" width="150" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="LAN&#xa;(ポンマシン駆動信号・カメラ制御)" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#999999;fontSize=11;exitX=0.46;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.331;entryY=0.034;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="midi_atem" target="15">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1035" y="722" as="sourcePoint"/>
+                        <mxPoint x="980" y="680" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1000" y="630"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" value="ポンマシーン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;align=center;verticalAlign=top;horizontal=1;" vertex="1" parent="1">
+                    <mxGeometry x="1010" y="856" width="160" height="114" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="ステッピングモーター" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontColor=#333333;" vertex="1" parent="1">
+                    <mxGeometry x="1017.5" y="926" width="145" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="STEP400" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="1017.5" y="890" width="145" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="LAN&#xa;(OSC)" style="edgeStyle=elbowEdgeStyle;rounded=1;curved=1;endArrow=classic;strokeWidth=2;strokeColor=#999999;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="15" target="19">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1025" y="760" as="sourcePoint"/>
+                        <mxPoint x="1080" y="850" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="990" y="820"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
