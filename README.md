@@ -6,7 +6,7 @@ Electron + React + TypeScript で構築された、MIDI信号による自動化�
 
 ## 機器構成
 
-![機器構成図](./機器構成.drawio.png)
+![機器構成図](./about.drawio.svg)
 
 ## 主な機能
 
