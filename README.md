@@ -1,4 +1,4 @@
-# ponMachineSTEP
+# 卒業式ポンマシーン
 
 卒業式の筒（卒業証書を入れる筒）を自動で開閉する装置の制御アプリケーション
 
@@ -7,6 +7,10 @@ Electron + React + TypeScript で構築された、MIDI信号による自動化�
 ## 機器構成
 
 ![機器構成図](./doc/about.drawio.svg)
+
+## アプリケーション画面
+
+![アプリケーション画面](./doc/app.png)
 
 ## 主な機能
 
